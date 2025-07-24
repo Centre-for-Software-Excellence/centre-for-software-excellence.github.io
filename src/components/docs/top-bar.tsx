@@ -65,9 +65,6 @@ export const TopBar = ({
         </div>
         {/* Mobile Menu Toggle */}
         {/* NOTE: here we use showSiebar becase we only need to show search on certain ropute, e.g. blog/research */}
-        {ui.searchEnabled && showSidebar && (
-          <SearchComponent className="md:hidden" />
-        )}
         <Button
           variant="ghost"
           size="icon"
@@ -98,7 +95,6 @@ export const TopBar = ({
               </UnderlineText>
             </div>
           ))}
-          {ui.searchEnabled && showSidebar && <SearchComponent />}
         </div>
       </div>
     </header>

@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { ResearchPageSkeleton } from '@/components/common/skeleton';
 import { ResearchList } from '@/components/docs/article-list';
+import { SearchComponent } from '@/components/docs/search';
 import { FrontmatterForTSX } from '@/components/md/frontmatter';
 import { usePublications } from '@/hooks/use-publications';
 
@@ -18,7 +19,8 @@ export default function ResearchPage() {
           title: 'Research',
         }}
       />
-      <div className="mt-8">
+      <SearchComponent className="mt-8" />
+      <div className="mt-4">
         <Suspense fallback={<ResearchPageSkeleton />}>
           <ResearchContent />
         </Suspense>

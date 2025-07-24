@@ -6,7 +6,7 @@ import MiniSearch from 'minisearch';
 
 // import records for tsx files mannually defined in config
 import recordsTsx from '@/config/search/records.json';
-import { researchRecords } from '@/config/search/research-records';
+import { blogRecords, researchRecords } from '@/config/search/override-records';
 
 export interface DocRecord {
   id: string;
@@ -86,6 +86,7 @@ export function buildIndex() {
   });
   mini.addAll(records);
   mini.addAll(researchRecords());
+  mini.addAll(blogRecords());
 
   writeFileSync('public/search/index.json', JSON.stringify(mini), 'utf-8');
   writeFileSync('public/search/records.json', JSON.stringify(records), 'utf-8');

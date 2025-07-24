@@ -1,12 +1,5 @@
 [
   {
-    "title": "Another Blog Post",
-    "abstract": "This should be the other blog post.",
-    "date": "2025-07-15",
-    "category": "General",
-    "link": "/docs/blog/anotherblog"
-  },
-  {
     "title": "More blog posts are coming soon!",
     "abstract": "This is a placeholder for more blog posts that will be added soon.",
     "date": "2025-07-14",

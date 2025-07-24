@@ -1,4 +1,5 @@
 import { BlogsList } from '@/components/docs/article-list';
+import { SearchComponent } from '@/components/docs/search';
 import { FrontmatterForTSX } from '@/components/md/frontmatter';
 import { useBlogPosts } from '@/hooks/use-blog-posts';
 
@@ -11,7 +12,8 @@ export default function BlogsPage() {
           title: 'Blogs',
         }}
       />
-      <div className="mt-8">
+      <SearchComponent className="mt-8" />
+      <div className="mt-4">
         <BlogsList itemsPerPage={5} content={blogs} />
       </div>
     </div>

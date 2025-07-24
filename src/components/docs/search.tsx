@@ -11,17 +11,20 @@ import { cn } from '@/lib/utils';
 interface SearchComponentProps {
   className?: string;
   placeholder?: string;
+  mobileView?: boolean;
 }
 
 export function SearchComponent({
   className,
   placeholder = 'Search articles...',
+  mobileView = false,
 }: SearchComponentProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<EnhancedSearchResult[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
   const overlayInputRef = useRef<HTMLInputElement>(null);
@@ -172,11 +175,23 @@ export function SearchComponent({
   return (
     <>
       {/* Desktop Search - Placeholder input */}
-      <div className={cn('relative hidden md:block', className)}>
-        <div className="relative">
-          <Search
-            className="h-4 w-4 text-muted-foreground"
+      <div
+        className={cn(
+          'relative',
+          mobileView ? 'hidden md:block' : 'block',
+          className,
+        )}
+      >
+        <div className="relative flex items-center">
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            ref={inputRef}
+            type="text"
+            placeholder={placeholder}
+            value=""
             onClick={openSearchOverlay}
+            readOnly
+            className="w-full border-0 border-b-1 bg-transparent pr-10 pl-10 shadow-none focus:shadow-none focus:ring-0 focus-visible:border-none! focus-visible:shadow-none focus-visible:ring-0 dark:bg-transparent"
           />
         </div>
       </div>
@@ -186,7 +201,10 @@ export function SearchComponent({
         variant="ghost"
         size="icon"
         onClick={openSearchOverlay}
-        className="h-9 w-9 p-0 md:hidden"
+        className={cn(
+          'h-9 w-9 p-0 md:hidden',
+          mobileView ? 'md:hidden' : 'hidden',
+        )}
       >
         <Search className="h-4 w-4" />
       </Button>

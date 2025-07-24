@@ -42,16 +42,10 @@ export default function DocsPage() {
 
     loadDoc();
   }, [location.pathname]);
-  // TODO: if we needto display sidebar, use this:
-  // const isBlogArticlePage = !!location.pathname.match(/^\/docs\/blog\/[^/]+$/);
-  const isBlogArticlePage = false;
+  const showSidebar = false; // disabled
 
   return (
-    <Layout
-      isArticle={isArticle}
-      loading={loading}
-      showSidebar={isBlogArticlePage}
-    >
+    <Layout isArticle={isArticle} loading={loading} showSidebar={showSidebar}>
       {/* Main Content */}
       <main
         className={cn(
