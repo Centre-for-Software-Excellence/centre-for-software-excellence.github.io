@@ -6,7 +6,6 @@ import { Button } from '@/components/common/ui/button';
 import { getTopbarUIConfig } from '@/config/ui';
 import { cn } from '@/lib/utils';
 import { UnderlineText } from '../common/ui/underline-text';
-import { SearchComponent } from './search';
 
 export const TopBar = ({
   menuOpen,

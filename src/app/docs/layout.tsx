@@ -4,12 +4,14 @@ import { Footer } from '@/components/docs/footer';
 import { DocsSidebar } from '@/components/docs/sidebar';
 import { TopBar } from '@/components/docs/top-bar';
 import { TableOfContent } from '@/components/md/table-of-content';
+import { cn } from '@/lib/utils';
 
 interface LayoutProps {
   children: React.ReactNode;
   isArticle?: boolean;
   loading?: boolean;
   showSidebar?: boolean;
+  showFooter?: boolean;
 }
 
 export default function Layout({
@@ -17,10 +19,11 @@ export default function Layout({
   isArticle = true,
   loading = false,
   showSidebar = true,
+  showFooter = true,
 }: LayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <div className="relative w-full bg-background">
+    <div className="relative w-full">
       {/* Top Bar */}
       <TopBar
         menuOpen={menuOpen}
@@ -41,7 +44,7 @@ export default function Layout({
         {/* Right Sidebar - Table of Contents of current markdown doc*/}
         {isArticle && <TableOfContent className="w-full" />}
       </div>
-      <Footer />
+      {showFooter && <Footer />}
     </div>
   );
 }

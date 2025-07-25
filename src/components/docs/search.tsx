@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Search, X } from 'lucide-react';
-import { Suggestion } from 'minisearch';
+// import { Suggestion } from 'minisearch';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/common/ui/button';
@@ -21,7 +21,7 @@ export function SearchComponent({
 }: SearchComponentProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<EnhancedSearchResult[]>([]);
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  // const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,7 +44,7 @@ export function SearchComponent({
     const search = async () => {
       if (!query.trim()) {
         setResults([]);
-        setSuggestions([]);
+        // setSuggestions([]);
         return;
       }
 
@@ -53,13 +53,13 @@ export function SearchComponent({
         fuzzy: 0.2,
         boost: { title: 2, description: 1, headings: 1, tags: 1 },
       });
-      const searchSuggestions = await searchService.suggest(query, {
-        prefix: true,
-        fuzzy: 0.2,
-      });
+      // const searchSuggestions = await searchService.suggest(query, {
+      //   prefix: true,
+      //   fuzzy: 0.2,
+      // });
 
       setResults(searchResults);
-      setSuggestions(searchSuggestions);
+      // setSuggestions(searchSuggestions);
     };
     search();
     setSelectedIndex(-1);
@@ -126,7 +126,8 @@ export function SearchComponent({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOverlayOpen) return;
 
-    const totalItems = suggestions.length + results.length;
+    const totalItems = results.length;
+    // const totalItems = suggestions.length + results.length;
 
     switch (e.key) {
       case 'ArrowDown':
@@ -140,15 +141,18 @@ export function SearchComponent({
       case 'Enter':
         e.preventDefault();
         if (selectedIndex >= 0) {
-          if (selectedIndex < suggestions.length) {
-            // Selected a suggestion
-            setQuery(suggestions[selectedIndex].suggestion);
-            overlayInputRef.current?.focus();
-          } else {
-            // Selected a result
-            const resultIndex = selectedIndex - suggestions.length;
-            handleResultClick(results[resultIndex]);
-          }
+          // if (selectedIndex < suggestions.length) {
+          //   // Selected a suggestion
+          //   setQuery(suggestions[selectedIndex].suggestion);
+          //   overlayInputRef.current?.focus();
+          // } else {
+          //   // Selected a result
+          //   const resultIndex = selectedIndex - suggestions.length;
+          //   handleResultClick(results[resultIndex]);
+          // }
+
+          const resultIndex = selectedIndex;
+          handleResultClick(results[resultIndex]);
         }
         break;
       case 'Escape':
@@ -162,10 +166,10 @@ export function SearchComponent({
     closeSearchOverlay();
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setQuery(suggestion);
-    overlayInputRef.current?.focus();
-  };
+  // const handleSuggestionClick = (suggestion: string) => {
+  //   setQuery(suggestion);
+  //   overlayInputRef.current?.focus();
+  // };
 
   const clearSearch = () => {
     setQuery('');
@@ -191,7 +195,7 @@ export function SearchComponent({
             value=""
             onClick={openSearchOverlay}
             readOnly
-            className="w-full border-0 border-b-1 bg-transparent pr-10 pl-10 shadow-none focus:shadow-none focus:ring-0 focus-visible:border-none! focus-visible:shadow-none focus-visible:ring-0 dark:bg-transparent"
+            className="w-full rounded-none border-0 border-b-1 bg-transparent pr-10 pl-10 shadow-none focus:shadow-none focus:ring-0 focus-visible:border-none! focus-visible:shadow-none focus-visible:ring-0 dark:bg-transparent"
           />
         </div>
       </div>
@@ -257,34 +261,34 @@ export function SearchComponent({
                   className="max-h-80 overflow-y-auto border-t p-1"
                 >
                   {/* Suggestions */}
-                  {suggestions.length > 0 && (
-                    <div className="mb-2 border-b border-border pb-2">
-                      <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
-                        Suggestions
-                      </div>
-                      {suggestions.map((suggestion, index) => (
-                        <button
-                          ref={(el) => {
-                            itemRefs.current[index] = el;
-                          }}
-                          data-index={index}
-                          key={`suggestion-${index}`}
-                          onClick={() =>
-                            handleSuggestionClick(suggestion.suggestion)
-                          }
-                          className={cn(
-                            'w-full rounded-sm px-2 py-1.5 text-left text-sm transition-colors',
-                            'hover:bg-accent hover:text-accent-foreground',
-                            selectedIndex === index &&
-                              'bg-accent text-accent-foreground',
-                          )}
-                        >
-                          <Search className="mr-2 inline h-3 w-3 text-muted-foreground" />
-                          {suggestion.suggestion}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  {/* {suggestions.length > 0 && ( */}
+                  {/*   <div className="mb-2 border-b border-border pb-2"> */}
+                  {/*     <div className="px-2 py-1 text-xs font-medium text-muted-foreground"> */}
+                  {/*       Suggestions */}
+                  {/*     </div> */}
+                  {/*     {suggestions.map((suggestion, index) => ( */}
+                  {/*       <button */}
+                  {/*         ref={(el) => { */}
+                  {/*           itemRefs.current[index] = el; */}
+                  {/*         }} */}
+                  {/*         data-index={index} */}
+                  {/*         key={`suggestion-${index}`} */}
+                  {/*         onClick={() => */}
+                  {/*           handleSuggestionClick(suggestion.suggestion) */}
+                  {/*         } */}
+                  {/*         className={cn( */}
+                  {/*           'w-full rounded-sm px-2 py-1.5 text-left text-sm transition-colors', */}
+                  {/*           'hover:bg-accent hover:text-accent-foreground', */}
+                  {/*           selectedIndex === index && */}
+                  {/*             'bg-accent text-accent-foreground', */}
+                  {/*         )} */}
+                  {/*       > */}
+                  {/*         <Search className="mr-2 inline h-3 w-3 text-muted-foreground" /> */}
+                  {/*         {suggestion.suggestion} */}
+                  {/*       </button> */}
+                  {/*     ))} */}
+                  {/*   </div> */}
+                  {/* )} */}
 
                   {/* Results */}
                   {results.length > 0 && (
@@ -293,7 +297,8 @@ export function SearchComponent({
                         Results
                       </div>
                       {results.map((result, index) => {
-                        const actualIndex = suggestions.length + index;
+                        const actualIndex = index;
+                        // const actualIndex = suggestions.length + index;
                         return (
                           <button
                             ref={(el) => {
@@ -334,13 +339,12 @@ export function SearchComponent({
                   )}
 
                   {/* No results */}
-                  {query.trim() &&
-                    results.length === 0 &&
-                    suggestions.length === 0 && (
-                      <div className="px-2 py-4 text-center text-sm text-muted-foreground">
-                        No results found for "{query}"
-                      </div>
-                    )}
+                  {query.trim() && results.length === 0 && (
+                    // suggestions.length === 0 &&
+                    <div className="px-2 py-4 text-center text-sm text-muted-foreground">
+                      No results found for "{query}"
+                    </div>
+                  )}
                 </div>
               )}
             </div>

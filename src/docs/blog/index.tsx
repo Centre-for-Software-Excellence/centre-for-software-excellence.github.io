@@ -1,10 +1,17 @@
+import { Suspense } from 'react';
+
+import { ArticleIndexSkeleton } from '@/components/common/skeleton';
 import { BlogsList } from '@/components/docs/article-list';
 import { SearchComponent } from '@/components/docs/search';
 import { FrontmatterForTSX } from '@/components/md/frontmatter';
 import { useBlogPosts } from '@/hooks/use-blog-posts';
 
-export default function BlogsPage() {
+function BlogsContent() {
   const blogs = useBlogPosts();
+  return <BlogsList itemsPerPage={5} content={blogs} />;
+}
+
+export default function BlogsPage() {
   return (
     <div className="mx-auto py-8 md:px-4">
       <FrontmatterForTSX
@@ -14,7 +21,9 @@ export default function BlogsPage() {
       />
       <SearchComponent className="mt-8" />
       <div className="mt-4">
-        <BlogsList itemsPerPage={5} content={blogs} />
+        <Suspense fallback={<ArticleIndexSkeleton />}>
+          <BlogsContent />
+        </Suspense>
       </div>
     </div>
   );

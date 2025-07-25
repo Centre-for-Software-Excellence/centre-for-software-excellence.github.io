@@ -28,7 +28,7 @@ export function ResearchCard({
     >
       <Card
         className={cn(
-          'h-full w-full rounded border-none bg-transparent py-2 shadow-none transition-all duration-300 hover:border-foreground dark:bg-transparent dark:hover:border-active',
+          'h-full w-full rounded border-none bg-transparent py-2 shadow-none transition-all duration-300 hover:border-foreground dark:hover:border-active',
         )}
       >
         <CardContent className="px-0 py-6 transition-all duration-300 ease-in-out group-hover:translate-y-[2px] group-hover:scale-[95%] sm:px-2 md:px-6">

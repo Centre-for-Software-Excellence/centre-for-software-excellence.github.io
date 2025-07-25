@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { ResearchPageSkeleton } from '@/components/common/skeleton';
+import { ArticleIndexSkeleton } from '@/components/common/skeleton';
 import { ResearchList } from '@/components/docs/article-list';
 import { SearchComponent } from '@/components/docs/search';
 import { FrontmatterForTSX } from '@/components/md/frontmatter';
@@ -21,7 +21,7 @@ export default function ResearchPage() {
       />
       <SearchComponent className="mt-8" />
       <div className="mt-4">
-        <Suspense fallback={<ResearchPageSkeleton />}>
+        <Suspense fallback={<ArticleIndexSkeleton />}>
           <ResearchContent />
         </Suspense>
       </div>

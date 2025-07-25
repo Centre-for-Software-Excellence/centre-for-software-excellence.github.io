@@ -1,9 +1,16 @@
 [
   {
+    "title": "RepoForge: Training a SOTA Fast-thinking SWE Agent with an End-to-End Data Curation Pipeline Synergizing SFT and RL at Scale",
+    "abstract": "The Problem: Training software engineering (SWE) LLMs is bottlenecked by expensive infrastructure, inefficient evaluation pipelines, scarce training data, and costly quality control. Our Solution: RepoForge: an autonomous, end-to-end pipeline that generates, evaluates, and trains SWE agents at scale. We present:...",
+    "date": "2025-07-17",
+    "category": "AI/ML",
+    "link": "/docs/blog/repoforge"
+  },
+  {
     "title": "More blog posts are coming soon!",
-    "abstract": "This is a placeholder for more blog posts that will be added soon.",
+    "abstract": "We will keep posting more blog posts and articles in the future.",
     "date": "2025-07-14",
     "category": "General",
-    "link": "/docs/blog/moreblog"
+    "link": "/docs/blog/more-blogs"
   }
 ]

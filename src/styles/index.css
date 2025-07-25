@@ -2,7 +2,7 @@
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
 
-/* latin */
+/* Geist Sans - Normal */
 @font-face {
   font-family: 'Geist';
   font-style: normal;
@@ -15,10 +15,36 @@
     U+2215, U+FEFF, U+FFFD;
 }
 
-/* latin */
+/* Geist Sans - Italic */
+@font-face {
+  font-family: 'Geist';
+  font-style: italic;
+  font-weight: 100 900;
+  src: url(https://fonts.gstatic.com/s/geist/v3/gyB0hwUxId8gMEwcGFU--i3wRw.woff2)
+    format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+/* Geist Mono - Normal */
 @font-face {
   font-family: 'Geist Mono';
   font-style: normal;
+  font-weight: 100 900;
+  src: url(https://fonts.gstatic.com/s/geistmono/v3/or3nQ6H-1_WfwkMZI_qYFrcdmg.woff2)
+    format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+/* Geist Mono - Oblique (斜体还在开发中，使用 oblique) */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: oblique 0deg 15deg;
   font-weight: 100 900;
   src: url(https://fonts.gstatic.com/s/geistmono/v3/or3nQ6H-1_WfwkMZI_qYFrcdmg.woff2)
     format('woff2');
@@ -81,6 +107,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-gradient-start: var(--gradient-start);
 }
 
 :root {
@@ -120,6 +147,7 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
   --item-active: oklch(0.49 0.23 264);
   --code-background: oklch(0.21 0.006 285.885);
+  --gradient-start: oklch(0.141 0.005 285.823);
 }
 
 .dark {
@@ -156,6 +184,7 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
   --item-active: oklch(0.72 0.17 264);
   --code-background: oklch(0.21 0.006 285.885);
+  --gradient-start: oklch(0.72 0.17 264);
 }
 
 @layer base {
@@ -164,6 +193,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  html {
+    @apply scroll-pt-14;
   }
 }
 
@@ -232,6 +264,40 @@
   .katex .katex-html {
     @apply hidden;
   }
+
+  math {
+    @apply text-foreground;
+  }
+
+  table {
+    @apply my-0!;
+  }
+
+  /* hide footnote default label, use customized header instead*/
+  .footnotes h2 {
+    @apply hidden;
+  }
+
+  /* these are used to hide the first backlink, reduce the backlink sup number by 1, show the sup with number > 1 */
+  li[id^='user-content-fn-'] p a:nth-child(2) {
+    display: none !important;
+  }
+  li[id^='user-content-fn-'] p a[data-footnote-backref] sup {
+    display: none;
+  }
+  li[id^='user-content-fn-'] {
+    counter-reset: backlink-counter 0;
+  }
+  li[id^='user-content-fn-'] p a[data-footnote-backref]:not(:nth-child(2)) {
+    counter-increment: backlink-counter;
+  }
+  li[id^='user-content-fn-']
+    p
+    a[data-footnote-backref]:not(:nth-child(2)):not(:nth-child(3))::after {
+    content: counter(backlink-counter);
+    vertical-align: super;
+    font-size: smaller;
+  }
 }
 
 @layer components {
@@ -241,29 +307,15 @@
     /* set a height because the contents are position: absolute, thus natively there's no height */
     height: 4000px;
   }
-  .grid-background {
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.07) 2px, transparent 2px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.07) 2px, transparent 2px),
-      linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
 
-    @variant dark {
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.07) 2px, transparent 2px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.07) 2px, transparent 2px),
-        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-    }
-    background-size:
-      100px 100px,
-      100px 100px,
-      25px 25px,
-      25px 25px;
-    background-position:
-      -2px -2px,
-      -2px -2px,
-      -1px -1px,
-      -1px -1px;
+  .bg-radial-center-out {
+    background: radial-gradient(
+      ellipse at center,
+      oklch(from var(--background) l c h / 0.3) 0%,
+      oklch(from var(--background) l c h / 0.3) 50%,
+      oklch(from var(--background) l c h / 0.8) 70%,
+      oklch(from var(--background) l c h / 1) 85%,
+      oklch(from var(--background) l c h / 1) 100%
+    );
   }
 }

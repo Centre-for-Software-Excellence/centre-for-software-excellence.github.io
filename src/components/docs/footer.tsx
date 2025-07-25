@@ -1,5 +1,5 @@
 import { UnderlineLink } from '@/components/common/underline-link';
-import { Muted, Small } from '@/components/md';
+import { Muted } from '@/components/md';
 import { getFooterUIConfig } from '@/config/ui';
 import { ModeToggle } from '../common/mode-toggle';
 

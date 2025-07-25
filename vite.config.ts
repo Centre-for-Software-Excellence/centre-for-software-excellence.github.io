@@ -14,6 +14,7 @@ import { defineConfig } from 'vite';
 import {
   remarkExtractFrontmatter,
   remarkExtractTOC,
+  remarkForceAllFootnotesAtStart,
 } from './src/lib/docs/mdx-plugins';
 
 export default defineConfig({
@@ -32,6 +33,7 @@ export default defineConfig({
     mdx({
       remarkPlugins: [
         remarkGfm,
+        remarkForceAllFootnotesAtStart,
         remarkMath,
         frontmatter,
         remarkExtractFrontmatter,

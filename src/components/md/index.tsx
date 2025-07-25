@@ -129,7 +129,10 @@ export function P({ children, className, ...rest }: Props) {
 export function Blockquote({ children, className, ...rest }: Props) {
   return (
     <blockquote
-      className={cn('mt-6 border-l-2 border-active pl-6 italic', className)}
+      className={cn(
+        'mt-6 border-l-2 border-foreground pl-6 italic dark:border-active',
+        className,
+      )}
       {...rest}
     >
       {children}
@@ -224,7 +227,7 @@ export function Li({ children, className, ...rest }: Props) {
   return (
     <li
       className={cn(
-        'text-foreground [&>p]:my-0 [&>p]:mt-2 [&>p]:leading-7',
+        'text-muted-foreground [&>p]:my-0 [&>p]:mt-2 [&>p]:leading-7',
         className,
       )}
       {...rest}
@@ -298,7 +301,10 @@ export function Strong({ children, className, ...rest }: Props) {
 export function Small({ children, className, ...rest }: Props) {
   return (
     <small
-      className={cn('text-sm leading-none font-medium', className)}
+      className={cn(
+        'text-sm leading-none font-medium text-foreground',
+        className,
+      )}
       {...rest}
     >
       {children}

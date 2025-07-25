@@ -6,12 +6,7 @@ interface SkeletonProps {
 
 export function Skeleton({ className }: SkeletonProps) {
   return (
-    <div
-      className={cn(
-        'animate-pulse rounded-md bg-muted/60',
-        className
-      )}
-    />
+    <div className={cn('animate-pulse rounded-md bg-muted/60', className)} />
   );
 }
 
@@ -23,7 +18,7 @@ export function BlogsSkeleton() {
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-6 w-24" />
         </div>
-        <Skeleton className="mb-8 mt-4 h-6 w-96" />
+        <Skeleton className="mt-4 mb-8 h-6 w-96" />
       </div>
       <div className="mx-auto max-w-4xl">
         <div className="grid max-w-4xl grid-cols-1 justify-items-center gap-4 p-4 md:grid-cols-2 md:grid-rows-2">
@@ -38,7 +33,7 @@ export function BlogsSkeleton() {
               </div>
             </div>
           </div>
-          
+
           {/* Second and third blog cards */}
           {[1, 2].map((i) => (
             <div key={i} className="w-full">
@@ -66,7 +61,7 @@ export function ResearchSkeleton() {
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-6 w-24" />
         </div>
-        <Skeleton className="mb-8 mt-4 h-6 w-96" />
+        <Skeleton className="mt-4 mb-8 h-6 w-96" />
       </div>
       <div className="mx-auto max-w-4xl">
         <div className="flex w-full flex-col items-center gap-4 p-4 md:px-8">
@@ -89,12 +84,9 @@ export function ResearchSkeleton() {
   );
 }
 
-export function ResearchPageSkeleton() {
+export function ArticleIndexSkeleton() {
   return (
     <div className="mx-auto px-4 py-8">
-      <div className="mb-8">
-        <Skeleton className="h-12 w-48" />
-      </div>
       <div className="space-y-6">
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="rounded-lg border bg-card p-6 shadow-sm">
@@ -111,3 +103,4 @@ export function ResearchPageSkeleton() {
     </div>
   );
 }
+
