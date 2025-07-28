@@ -1,0 +1,839 @@
+---
+title: 'RepoForge: Training a SOTA Fast-thinking SWE Agent with an End-to-End Data Curation Pipeline Synergizing SFT and RL at Scale'
+description: 'The Problem: Training software engineering (SWE) LLMs is bottlenecked by expensive infrastructure, inefficient evaluation pipelines, scarce training data, and costly quality control. Our Solution: RepoForge: an autonomous, end-to-end pipeline that generates, evaluates, and trains SWE agents at scale. We present:...'
+date: 2025-07-17
+category: 'AI/ML'
+author: ['RepoForge Team']
+---
+
+import { Small } from '@/components/md';
+
+## TL;DR:
+
+**The Problem:** Training software engineering (SWE) LLMs is bottlenecked by expensive infrastructure, inefficient evaluation pipelines, scarce training data, and costly quality control.
+
+**Our Solution:** RepoForge: an autonomous, end-to-end pipeline that generates, evaluates, and trains SWE agents at scale. We present:
+
+- 🚀 **RepoForge-8B-Agent:** achieves 17.4% on SWE-Bench Verified [^1] (new **SOTA** for ≤8B LLMs)
+
+- 📊 **7,304 executable environments** auto-generated from real GitHub commits (with zero manual intervention)
+
+- 💾 **14× storage reduction**: 1.4 GB → 102 MB per instance via intelligent dependency management and image pruning
+
+- ⚡ **\>70% faster evaluation** using a **Ray**\-powered [^2] distributed RepoForge harness
+
+- **🏷️ 19,000× cheaper labeling** through our automated SPICE difficulty assessment technique
+
+## Overview
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-1.png" />
+</div>
+
+**Figure 1**: _SWE-Bench Verified Performance vs. Model Size for LLM Coding Agents
+with the official OpenHands[^3] tested in-house. **RepoForge-8B-Agent** stands
+out as the best performer, achieving **16.4%**, significantly outperforming
+other models such as OpenHands-LM-7B-v0.1[^4] (15.4%) ,
+SWE-Gym-OpenHands-7B-Agent [^5] (11.4%), and Qwen3-8B [^6] (11.4%)._
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-2.png" />
+</div>
+**Figure 2**: _SWE-Bench Verified Performance vs. Model Size for LLM Coding
+Agents with RepoForge Harness tested in-house with RepoForge OpenHands (Our
+improved OpenHands). **RepoForge-8B-Agent, a non-thinking model,** achieves
+**17.4%**, nearly matching the highest performing model in 8B scale Qwen3-8B
+(17.8%), which is a thinking model. It also performs on par with the much larger
+Qwen3-32B (17.4%) model despite having far fewer parameters._
+
+The last twelve months have seen language models evolve from passive inferrers into **active agents** (i.e. RAGEN [^11], Verl [^10], ROLL [^8], ART [^9], SkyRL [^5]). Early open‑source frameworks such as **Search‑R1** [^7] and **MMSearch‑R1** [^8] taught models to interleave chain‑of‑thought with _single_ tool invocations for web search. **ToRL** [^9] pushed further by scaling reinforcement learning _directly from base checkpoints_ with unrestricted exploration, while the underlying library **veRL** [^10] supplied fast, GPU‑efficient RLHF primitives. Most recently, **SkyRL** [^5] demonstrated that the same ideas can be extended to _long‑horizon_ environments like SWE‑Bench by layering VeRL with the OpenHands execution scaffold.
+
+The rapid advancement of these work has profoundly reshaped software engineering, automating tasks from pull-request drafting and issue triaging to full module scaffolding. While recent frameworks like SkyRL and OpenHands have demonstrated impressive capabilities on benchmarks like SWE-Bench, scaling these approaches to real-world deployment reveals fundamental challenges spanning the entire training pipeline—from data curation and evaluation infrastructure to reinforcement learning optimization.
+
+A key component that enables these benchmarks is the evaluation **harness** [^22]—the critical infrastructure responsible for executing agent-generated code changes and measuring their correctness. Unlike traditional NLP tasks where outputs can be scored statically, software engineering agents must be validated through actual code execution in realistic development environments. Central to SWE-Bench and SWE-Gym, the harness orchestrates a complex pipeline: spinning up isolated Docker environments, installing project dependencies, applying the agent's proposed patches, running comprehensive test suites, and collecting pass/fail results. Essentially, it acts as an automated CI/CD system that can reliably reproduce the conditions under which a real software fix would be tested and deployed.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-3.png" />
+</div>
+**Figure 3:** _This diagram illustrates the RepoForge pipeline, designed to
+address key challenges in training and evaluating reinforcement learning (RL)
+agents for software engineering tasks._
+
+However, building production-scale SWE agents requires addressing challenges that extend far beyond just the evaluation harness, touching every aspect of the training pipeline:
+
+1. Challenge 1: **High Storage Costs of Container-based Sandbox Evaluation** \- Evaluating software engineering tasks typically requires isolating each task within dedicated Docker images (\~1.4 GB per image, plus approximately 7 GB per running container). This leads to significant disk usage, especially pronounced during reinforcement learning processes, which frequently execute tasks in multiple parallel rollouts over numerous training iterations. For example, evaluating merely 500 SWE-Bench Verified like tasks demands around 690 GB of storage, easily exceeding 1 TB as RL evaluation scales up with repeated task execution, where each task requires a separate running container.
+
+2. Challenge 2: **Inefficient and Sequential Reward Evaluation Pipelines** \- Existing evaluation framework harnesses use sequential, blocking pipelines with no artifact reuse, creating massive latency and wasted compute during training loops.
+3. Challenge 3: **Limited Availability of High-Quality SWE Training Data** \- Executable SWE training data is scarce and typically requires extensive manual effort for curation, especially for historical issues. Developers must painstakingly reconstruct and validate dependencies to ensure accurate reproduction of issue-resolution processes.
+4. Challenge 4: **High Cost and Subjectivity of Manual Data Labeling** \- Manual difficulty assessment and quality filtering are expensive, subjective, and don't scale. Expert annotation can cost $15,000+ per 1,000 instances.
+5. Challenge 5: **Agentic Multi-Turn Reinforcement Learning Pipeline Bottlenecks** \- Multi-turn reinforcement learning suffers from "pipeline bubbles" where stages stall, especially problematic for 20-50 iteration trajectories required by modern scaffolds.
+
+<Small>Our Solution: RepoForge</Small>
+
+RepoForge is our answer to these challenges \- a fully autonomous pipeline that generates, evaluates, and improves software engineering LLM agents without manual intervention. Here's what we achieved:
+
+**14× storage reduction** (1.4 GB → 102 MB per instance) through intelligent image dependency pruning
+
+**\>70% latency reduction** with Ray-powered distributed evaluation and streaming pipelines  
+**7,304 executable environments** generated automatically from real GitHub commits with zero manual curation
+
+**19,000× cost reduction** in data labeling through our SPICE automated assessment system
+
+**3× RL speedup** by eliminating pipeline bubbles with asynchronous Docker execution
+
+The result? **RepoForge-8B-Agent** achieves **17.4%** on **SWE-Bench Verified** \- the new state-of-the-art for models ≤8B parameters, trained in just **5** **hours** on 8×H100 GPUs.
+
+In the following sections, we dive deep into each engineering challenge and our technical solutions:
+
+- **Optimize storage for large‑scale SWE environments**  
+  Learn how we used **Image Dependency Pruning** and **Minimal Runtime Environments** to shrink per‑instance container size from 1.4 GB to just 102 MB — a **14× reduction** — while still maintaining full test reproducibility.
+
+- **Build a fast, distributed evaluation harness**  
+  See how the **RepoForge Harness**, powered by Ray, overlaps build/install/evaluation stages, reuses container artifacts, and handles polyglot projects — achieving **\>70 % lower latency** compared to sequential harnesses like SWE‑Bench and SWE‑Gym[^9].
+
+- **Generate large‑scale, executable SWE data automatically**  
+  Understand how **RepoForge Agent** autonomously explores real GitHub commits, constructs minimal Docker environments, validates them end‑to‑end, and scales to **7,304 executable instances** with **zero manual intervention**.
+
+- **Label data at scale with automated difficulty assessment**  
+  Learn about **SPICE**, our Structured Problem Instance Classification Engine, which automatically scores task clarity, test validity, and difficulty. This enables **consistent, high‑quality labeling at 19,000× lower cost** than manual annotation.
+
+- **Eliminate pipeline bubbles in online RL training**  
+  Discover how the **RepoForge‑OpenHands scaffold** achieves a **3× RL speedup** with fully asynchronous Docker execution, direct `docker exec` tool calls, and dynamic producer–consumer rollout scheduling — avoiding long‑tail stalls and GIL bottlenecks.
+
+We also share key lessons learned about data quality, training strategies, and the unique challenges of scaling small models for software engineering tasks.
+
+## Challenges
+
+#### Challenge 1: Scalability of Base Runtime Images \- Storage Efficiency
+
+Modern software engineering benchmarks, like SWE-Bench, commonly package each task into an individual Docker image for isolation and reproducibility.
+
+However, this straightforward solution significantly compromises scalability due to the sheer size of the resulting Docker images. For instance, SWE-Bench Verified generates Docker images averaging 1.4 GB per task. Given hundreds or thousands of such images, the total storage rapidly balloons, quickly overwhelming standard infrastructure setups.
+
+In the Blog of SkyRL [^5], they also mentioned that
+
+> \*These environments can be resource-intensive, consuming 1+ CPUs and \~7GB of storage each. Even moderate configurations (e.g., batch size 16, 8 rollouts) can demand 100+ CPUs and close to 1TB of disk.
+
+Consider the practical implications: Running just 500 SWE-Bench Verified instances demands nearly 700 GB of disk storage—this already surpasses a substantial portion of a common 2 TB SSD. Scaling up to a real-world scenario, such as RepoForge’s 7,304 tasks, would require over 10 TB storage space if we adopted the same methodology. The magnitude of this storage demand becomes a critical bottleneck: storage exhaustion translates directly into degraded training efficiency, as evaluation tasks must either wait on limited storage resources or experience prolonged delays due to repeated disk operations.
+
+The inefficiency becomes even more severe when incorporating rejection sampling and reinforcement learning pipelines. Suppose we adopt the same SWE‑Bench‑Verified environment configuration and run on a machine with 224 CPUs and 2 TB of disk space.:
+
+1. During the RL training stage, evaluation requires running many sandboxes in parallel. For example, with a batch_size of 16 and a rollout_size of 8, we must handle 128 concurrent evaluation tasks. Even without considering image duplication, each running container consumes approximately 7 GB, leading to a total disk requirement of 7 GB × 16 × 8 \= **896 GB**—already close to saturating available storage and leaving little room for overhead or intermediate artifacts.
+2. The situation **escalates further** when generating trajectories for the SFT stage via **rejection sampling.** Running all 7,304 images under the same configuration would demand storage for both the base image (1.4 GB) and the runtime environment (7 GB) per instance. This totals (1.4 GB \+ 7 GB) × 7,304 \= approximately <span className="font-bold text-red-500">61 TB</span> of required storage—far beyond the capacity of typical infrastructure.
+
+In such scenarios, disk space becomes the true bottleneck, causing massive underutilization of CPUs, as compute resources remain idle waiting for storage availability rather than actively processing tasks as illustrated in Figure 4\.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-4.png" />
+</div>
+
+**Figure 4:** _In real training scenarios, the worker concurrency is highly constrained to disk utilization._
+
+#### Challenge 2: Scalable Evaluation Infrastructure at Speed
+
+Execution feedback plays a pivotal role in reinforcement learning for software engineering agents. Unlike traditional NLP tasks where model outputs can be evaluated through static metrics, SWE agents require real-world execution environments to validate their generated patches. A proposed solution is only "correct" when it compiles successfully, passes all relevant tests, and doesn't break existing functionality. This execution-based validation is fundamentally different from text-based evaluation and creates unique infrastructure challenges.
+
+However, existing systems like **SWE-Bench** and **SWE-Gym** adopt sequential, blocking pipelines, which severely limits scalability:
+
+###### The Problem: Sequential Pipeline Bottlenecks (Legacy Systems)
+
+Current evaluation systems for SWE benchmarks suffer from fundamental architectural limitations that create severe bottlenecks for large-scale training and evaluation. The core issue lies in their sequential, blocking execution model.
+
+**SWE-Bench & SWE-Gym**: These systems rely on sequential, blocking pipelines where each task progresses through discrete phases:  
+1\. **Build** the Docker environment  
+2\. **Install** dependencies and project  
+3\. **Evaluate** tests and collect results
+
+Each phase must complete fully before the next begins, creating a rigid pipeline with no parallelism or reuse. As documented in the SWE‑Gym paper:
+
+> _Creating executable environments with pre‑installed dependencies is crucial for developing software engineering agents… This process required approximately 200 human annotation hours and 10,000 CPU core hours._
+
+**The Current Harness Evaluation Problem:**
+
+- **No Overlap**: Build phase must complete entirely before Install can begin
+
+- **Dependency Hell**: For one instance, the image and the requirements need to be managed separately, leading to a [1,452‑line configuration file](https://github.com/SWE-bench/SWE-bench/blob/main/swebench/harness/constants/python.py) to control dependencies and separate Docker Hub images—difficult to maintain or extend to new instances.
+
+- **No Reuse of Dependency**: Each instance need to Install dependencies from scratch
+
+- **Resource Waste**: CPUs and memory sit idle during blocking I/O operations
+
+**It becomes more critical when RL at Scale:** RL training requires frequent reward computation. Sequential evaluation creates 2-10 minute delays per instance, making 20-50 turn trajectories take days instead of hours.
+
+###### The Engineering Challenge: Why This is Hard
+
+1\. **Environment Diversity**: Each repository may require different Python versions, C++ support, system dependencies, and build configurations  
+2\. **Isolation Requirements**: Tests must run in completely isolated environments to prevent interference  
+3\. **Reproducibility:** Results must be deterministic and reproducible across different infrastructure setups  
+4\. **Network Dependencies**: Many projects require external packages, creating unpredictable I/O bottlenecks  
+5\. **Scale** **Requirements**: RL training needs hundreds of evaluations per hour, not per day
+
+Traditional evaluation frameworks weren't designed for this level of complexity. They work well for static benchmarks where evaluation is deterministic and fast, but break down when facing the dynamic, resource-intensive nature of code execution.
+
+#### Challenge 3: The Scarcity of SWE Data — and How RepoForge Agent Solves It
+
+High‑quality, **executable** software‑engineering (SWE) training data is scarce.  
+ Most public benchmarks provide only a few hundred curated tasks — often static, outdated, and designed for one‑off evaluation rather than large‑scale training. Worse, these datasets typically rely on **manual environment construction** and **human labeling**, making them slow, expensive, and fundamentally unscalable.
+
+For teams building LLMs for software engineering, this scarcity creates a brutal bottleneck:  
+ **Not enough diverse tasks** to expose models to real‑world engineering challenges.  
+ **Inconsistent annotation quality**, with subjective human labels.  
+ **Weeks or months of manual curation** just to reach a few thousand usable examples.
+
+**The result?** Models plateau. Training pipelines stall. And scaling up becomes cost‑prohibitive.
+
+###### How RepoForge Agent Compares to Existing Approaches
+
+The environment construction challenge has been the Achilles' heel of SWE dataset creation. Let's see how different systems tackle this critical problem:
+
+**Manual Construction Era: SWE-bench & SWE-gym**
+
+- **SWE-bench:** Manual Dockerfile setups for 500 instances; heavy labor, coarse environments, and compatibility issues.
+
+- **SWE-gym:** 200+ hours of manual construction for \~2.4K instances; fully manual and not scalable.
+
+**Semi‑Automated Attempts:**
+
+- **Skywork-SWE:** Three‑tier Docker hierarchy and automated builds, but still needs manual creation of configuration templates to define how environments should be built and validation.
+
+- **SWE‑bench Live (REPOLAUNCH)** [^16]**:** LLM agent sets up environments interactively with version‑compatibility tricks, but no learning from past setups.
+
+- **SWE‑factory** [^17]**:** Multi‑agent system with memory pooling, yet complex and still reliant on manual checks.
+
+Another approach leverages synthetic data, such as SWE‑Smith, R2E‑Gym, and SWE‑Factory, which falls outside our study’s scope and will therefore not be compared here.
+
+#### Challenge 4: The High Cost of Data Labeling and Quality Control
+
+Labeling software engineering (SWE) training data is not just expensive — it is one of the most significant blockers to scaling agent training.
+
+High-quality SWE training requires understanding task difficulty, categorizing problem types, and filtering for educational value. But manual labeling is expensive, subjective, and doesn’t scale.
+
+#### **Background: SWE-bench Verified**
+
+To address issues in the original SWE-bench benchmark, OpenAI released **SWE-bench Verified**, a human-validated subset of 500 examples selected from the full test set. Samples were **filtered out** if any of three annotation criteria were rated severely (label 2 or 3), ensuring that the remaining tasks are:
+
+- **Well-specified**: Clear problem statements that unambiguously describe what a correct patch must achieve.
+
+- **Validly evaluated**: Unit tests that faithfully pass valid solutions and only reject incorrect ones.
+
+- **Difficulty-rated**: Annotators estimated how long a seasoned engineer would take to implement a correct patch. [OpenAI](https://openai.com/index/introducing-swe-bench-verified/)
+
+On this filtered set, GPT-4o achieves a **33.2% pass rate**, more than doubling prior open-source bests on the unfiltered benchmark. [OpenAI](https://openai.com/index/introducing-swe-bench-verified/)
+
+##### **SWE-bench Verified Annotation Criteria**
+
+| Criterion                                  | Label 0                                                             | Label 1                                               | Label 2                                         | Label 3                                                    |
+| ------------------------------------------ | ------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------- |
+| **Are the tasks well-specified?**          | Issue is clear; requirements for a successful solution are obvious. | Minor gaps, but a sensible interpretation exists.     | Vague description; multiple plausible fixes.    | Nearly impossible to know what’s being asked.              |
+| **How valid are the evaluation criteria?** | Tests perfectly cover all correct solutions.                        | Tests cover most solutions; may miss some edge cases. | Tests work but can reject reasonable solutions. | Tests too narrow or checking unrelated behavior.           |
+| **How difficult are the tasks?**           | \< 15 min fix (trivial assertions or tiny edits)                    | 15 min–1 h (small change requiring some thought)      | 1 h–4 h (substantial edits, multi-file changes) | \> 4 h (esoteric fixes, \>100 lines, deep research needed) |
+
+_Labels 2 and 3 trigger exclusion from SWE-bench Verified_ [OpenAI](https://openai.com/index/introducing-swe-bench-verified/)
+
+#### **The Manual Labeling Problem**
+
+Unlike general NLP tasks where crowd‑sourced annotations can suffice, SWE tasks require **expert‑level understanding** of codebases, build systems, and unit test semantics. To determine whether an issue is well‑specified, whether the tests are valid, and how difficult it is to fix, you need a human with engineering expertise to manually inspect the repository, read the issue, parse the patch, and run/verify tests.
+
+SWE-bench Verified exemplifies challenge:
+
+- Months of manual review to filter 2,294 instances from 12,000+ candidates
+- Human experts manually categorizing each task's difficulty and validity
+- Subjective assessments that vary between annotators
+- Expensive process that costs thousands of dollars per thousand labeled instances
+
+##### Why It’s Hard
+
+Difficulty and quality labeling for SWE agents is uniquely challenging compared to other machine learning domains because:
+
+1. **Multi‑dimensional Criteria:**  
+   Labels are not just “correct” or “incorrect.” You must judge **problem clarity**, **test coverage validity**, and **intrinsic difficulty** — each requires domain expertise.
+
+2. **Deep Repository Context:**  
+   SWE tasks are embedded in large, evolving codebases. Understanding difficulty means tracing dependencies, reading multiple files, and understanding build/test pipelines.
+
+3. **Execution‑based Semantics:**  
+   A patch’s correctness is not obvious from static inspection — it must be **applied and executed** to confirm it satisfies the issue without regressions.
+
+4. **Scale Requirements:**  
+   RL‑style pipelines need **tens of thousands** of labeled instances to avoid overfitting and saturating. Manual annotation at that scale is economically impossible.
+
+5. **Dynamic Benchmarks:**  
+   Real‑world issues evolve as repositories update. A label valid today might be invalid after a dependency upgrade tomorrow, requiring continuous re‑labeling.
+
+**In short:** labeling for SWE agents is a high‑skill, high‑cost task with multi‑axis complexity and a moving target
+
+### Challenge 5: Agent Based Online Reinforcement Learning \- Eliminating Bubbles in the Pipeline
+
+Multi-turn reinforcement‐learning pipelines at the repository level still hinge on three fundamental stages—LLM generation, environment interaction, and reward computation. Scaling these pipelines to 20–50 (or more) iterations per trajectory, as required by OpenHands scaffold, maintaining efficiency, stability, and resource utilization becomes increasingly challenging.
+
+#### The Problems: Resource & Pipeline Bubbles
+
+1. Resource Management  
+   Scaffolds like SkyRL-OpenHands employ a two-stage Docker build that installs and runs an internal server in a secondary image layer, adding roughly 4–10 GB per image and rapidly consuming disk space. Other frameworks (e.g., R2EGym) provide no built-in mechanism for distributing training across multiple machines, so each node must host full container images, further exacerbating storage pressure.
+
+2. Overhead and Pipeline Bubbles  
+   Coordinating multi-container workflows across dozens of iterations introduces significant overhead and gives rise to pipeline “bubbles” when stages stall waiting on one another. There are two core challenges driving these inefficiencies. First, model generation and environment execution depends on different types of resources. Whenever there are fewer active rollout requests (underutilizing GPUs) or fewer concurrent environment executions (underutilizing CPUs), idle gaps appear in the pipeline. These stalls stem mainly from latency in environment feedback loops, such as network calls, image builds and I/O, limiting the concurrency.  
+   Second, the pipeline cannot advance until _all_ trajectories in a batch have finished; any instance that takes significantly longer to execute creates a long-tail delay, forcing every other worker to wait and thereby dragging down overall throughput.
+
+## Our Method
+
+### Chllenge 1
+
+To address this issue, we leverage **Image Dependency Pruning**, an automatic algorithm to merge multiple images into one single image, and **Minimal Runtime Environments**, stripping out any unused dependencies so we can reuse these images for multi-instances.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-5.png" />
+</div>
+**Figure 5**: _Disk usage per instance in the RepoForge framework versus
+SWE‑Bench‑Verified. By applying dependency pruning and optimized base images,
+RepoForge delivers significantly more efficient disk utilization compared to the
+heavier SWEGym‑style images._
+
+1. **Pseudo Maximal Factoring Algorithm**
+
+The core of Image Dependency Pruning is our custom-designed **Pseudo Maximal Factoring Algorithm**. This algorithm systematically **identifies shared dependencies** across multiple Docker images. We process a sorted list of instances I1…InI₁…IₙI1​…In​ and their corresponding base image/dependencies D1…DnD₁…DₙD1​…Dn​. Iteratively, we attempt to rebase each later image onto an earlier one if all tests for that instance still pass. Once no further merges are possible in either forward or backward sweeps, the algorithm terminates with a minimized dependency list.
+
+$
+\begin{array}{l}
+\textbf{pseudo} \\
+\hline \\
+\textbf{Input:} \\
+\quad I[1\ldots n] \text{ -- list of instances, sorted by creation time} \\
+\quad D[1\ldots n] \text{ -- list of corresponding base images/dependencies} \\
+\quad \text{run\_tests}(i, d) \text{ -- returns true if instance } i \text{ passes all tests under image } d \\
+\textbf{Output:} \\
+\quad D[1\ldots n] \text{ -- "factored" dependency list} \\
+\\
+\textbf{for } j = 1 \text{ to } n \text{ do} \\
+\quad \text{// look to the left} \\
+\quad \textbf{for } i = 1 \text{ to } j-1 \text{ do} \\
+\qquad \textbf{if } D[j] \neq D[i] \land \text{run\_tests}(I[j], D[i]) \textbf{ then} \\
+\qquad\quad D[j] \leftarrow D[i] \\
+\qquad\quad \textbf{goto } \text{next\_j} \\
+\quad \text{// if none on the left, try to the right} \\
+\quad \textbf{for } i = n \text{ downto } j+1 \text{ do} \\
+\qquad \textbf{if } D[j] \neq D[i] \land \text{run\_tests}(I[j], D[i]) \textbf{ then} \\
+\qquad\quad D[j] \leftarrow D[i] \\
+\qquad\quad \textbf{break} \\
+\quad \text{next\_j:} \\
+\textbf{return } D
+\end{array}
+$
+
+Leveraging the algorithm, our **7304 instances can be run using only 937 images,** an average of **7.79 instances per image**.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-6.png" />
+</div>
+
+**Figure 6**: _In RepoForge Framework, multiple base commits can work on the same image, greatly reducing the disk requirement._
+
+2. **Minimal Runtime Environments**
+
+Complementing pruning, our Minimal Runtime Environments approach involves shifting away from bulky base images (such as full Ubuntu installations commonly used in SWE-Bench and SWE-Gym) toward more streamlined container bases like Python:slim. By directly installing necessary dependencies onto this minimal environment and removing unnecessary tools—such as compilers, build tools, or virtual environment frameworks—we drastically shrink the per-instance disk footprint.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-7.png" />
+</div>
+
+**Figure 7**: _A comparison between the RepoForge Docker image size and SWE-Bench Verified Docker image size._
+
+#### Results
+
+Combining Image Dependency Pruning with Minimal Runtime Environments, RepoForge achieves remarkable storage efficiency. The average Docker image size per task is reduced from 1.4 GB (SWE-Bench standard) to only 102 MB per instance—a 14× reduction. Even more notably, RepoForge’s 7,304 tasks require only 937 optimized Docker images in total. This means that each Docker image is efficiently reused across approximately 7.8 different instances, greatly improving storage utilization.
+
+In practice, this reduction directly alleviates disk-space-induced compute bottlenecks, enabling higher batch sizes, improved parallelization, and reduced waiting times during training and evaluation. Instead of idle CPU cores bottlenecked by limited disk resources, compute clusters become fully utilized, significantly increasing the training throughput. This directly translates into faster iteration cycles, shorter training durations, and more efficient scaling of RL pipelines.
+
+### Challenge 2
+
+##### Our Solution: RepoForge Harness \- A Ray-Powered Distributed Evaluation Engine
+
+To solve this, we built **RepoForge Harness** — a complete re‑implementation of the SWE‑Bench evaluation pipeline. It is **fully distributed** (Ray‑powered) and supports **streaming, overlapping stages** while **reusing build artifacts across tasks**. The result is **\> 70 % lower latency**.
+
+1. Core Innovation 1: Parallel, Streaming Build Pipeline
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-8.png" />
+</div>
+
+**Figure 8**: _In the default SWE‑Bench harness, container images are built **one at a time**, in a strictly sequential manner._
+
+RepoForge replaces this bottleneck with a **parallel, streaming build layer**:
+
+**Parallelized builds with `aiodocker`:**  
+ Instead of blocking on a single build, RepoForge schedules **concurrent image builds** using `aiodocker`. When a batch of instances arrives, images for those instances are built in parallel, drastically reducing total setup time.
+
+**Pre‑installing dependencies at build time:**
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-9.png" />
+</div>
+**Figure 9**: _RepoForge pre‑installs all required runtime dependencies so the
+evaluation can run immediately._
+
+During image construction, RepoForge pre‑installs all required runtime dependencies. This means no repeated `pip install` or `apt install` during evaluation, eliminating repetitive network fetches and reducing the risk of runtime failures caused by transient network issues. Each resulting image is **fully self‑contained** and ready for immediate execution, further cutting down evaluation latency.
+
+2. Core Innovation 2: Ray‑Powered Distributed Execution
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-10.png" />
+</div>
+
+**Figure 10**: _RepoForge leverages Ray Actors to scale up the sandbox server across multiple nodes._
+
+To better speed up the evaluation speed and save the disk size, we use **Ray** to speed up the execution feedback. We use Ray actor to start the sandbox so we can scale it to many machines. In SWE-Bench, the client manages everything locally using Docker, where container images are stored and executed per task without reuse, leading to redundancy and inefficiency. In contrast, RepoForge uses a distributed architecture powered by Ray, where clients send tasks to multiple Ray actors. These actors pull shared container images from either local or distributed image storage, enabling image reuse across tasks. This design allows for scalable, parallel execution with reduced overhead, as multiple actors can work concurrently using the same pre-built environments.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-11.png" />
+</div>
+
+**Figure 11**: _Averaged over 16 runs, RepoForge instance evaluations remain consistently fast, over 96% complete within two minutes._
+
+The upper limit of execution feedback waiting time is set to 120 seconds (95th percentile).
+
+Training data is concatenated according to execution time to minimize the bottleneck effect. This can speed up the RL training a lot.
+
+**RepoForge Harness natively supports multi‑language repositories** — Python, C, C++, and more.  
+Instead of assuming a single language per container, our build layer dynamically detects language ecosystems, installs only the required toolchains, and orchestrates builds and tests accordingly. This is critical for real‑world GitHub commits, which often involve polyglot projects (e.g., C++ backend with a Python frontend).
+
+| Feature                | SWE-Bench& SWE-Gym | RepoForge               |
+| ---------------------- | ------------------ | ----------------------- |
+| Architecture           | Sequential         | **Distributed (Ray)**   |
+| Concurrency            | Single-threaded    | **Up to 64 workers**    |
+| Image Reuse            | None               | **Intelligent caching** |
+| Container Management   | Manual             | **Automatic pooling**   |
+| Install Timing         | After build        | **During build**        |
+| Execution Model        | Blocking           | **Fully async**         |
+| Evaluation time        | 2-10 minutes       | **Average 75s**         |
+| Multi-Language Support | No                 | **Yes**                 |
+
+### Challenge 3
+
+#### **Fully Autonomous at Scale for Real SWE Issues: RepoForge Agent**
+
+To break through this data wall, we built **RepoForge Agent** — **a fully autonomous system** that _creates_ **evaluation-ready** SWE data you need, at unprecedented scale and fidelity.
+
+| System          | Manual Work         | Scale              | Docker Optimization      | Validation          | Learning           | Evaluation‑ready\* |
+| --------------- | ------------------- | ------------------ | ------------------------ | ------------------- | ------------------ | :----------------- |
+| SWE-bench       | 100% Manual         | 500 instances      | None                     | Human               | None               | **Yes**            |
+| SWE-gym         | 200+ hrs manual     | 2.4K instances     | None                     | Human               | None               | **Yes**            |
+| Skywork-SWE     | Template creation   | 10K instances      | Basic hierarchy          | Semi-auto           | None               | **Yes**            |
+| SWE-Builder     | Manual verification | Unknown            | None                     | Mixed               | Memory pool        | **Yes**            |
+| Repo2Run        | **0% Manual**       | 420 instances      | None                     | **Fully automated** | None               | No                 |
+| RepoForge Agent | **0% Manual**       | **7.3K instances** | **937 optimized images** | **Fully automated** | **Self-improving** | **Yes**            |
+
+**Evaluation‑ready** means that a Docker image for a given instance correctly runs designated tests (FAIL_TO_PASS and PASS_TO_PASS) before and after applying the golden patch, which is essential for meaningful evaluation. Repo2Run’s **Environment Building Success Rate** only measures whether `pytest` completes without fatal errors and does not verify that any specific tests (for example, a new test introduced in a commit’s test patch) actually execute as intended. Because feature‑specific tests aren’t guaranteed to work under that metric alone, those images aren’t suitable for evaluation or training.
+
+Instead of relying on a small, hand‑labeled benchmark, RepoForge Agent **actively explores real‑world GitHub commits**, reconstructs their build and test environments, and validates them into rich, executable tasks — all without human intervention.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-12.png" />
+</div>
+
+**Figure 12**: _Overview of the RepoForge automated pipeline for dependency inference, Docker environment construction, validation, self‑improvement, and SWE task generation._
+
+#### **RepoForge Agent: Step-by-Step Process:**
+
+**Multi-Agent Architecture**  
+ RepoForge Agent employs a sophisticated 3‑agent system built on ReAct principles (Reason → Act → Observe → Reflect), making it fundamentally different from linear pipeline approaches
+
+##### **1\. GitHub Commits → RepoForge Agent Autonomous Exploration**
+
+RepoForge Agent begins by pulling **real-world GitHub repositories** with diverse histories and commit structures. These are not pre‑curated toy projects — they are messy, authentic, and often contain complex build systems.  
+ From this entry point, the agent launches into **autonomous exploration** without any human intervention.
+
+##### **2️. Repository Navigation (Shell commands & exploration)**
+
+**Repo Builder Agent** takes over to deeply navigate the repository:
+
+- **CI/CD-Aware Python Detection:**  
+   Reads `.github/workflows/*.yml`, `setup.py`, `pyproject.toml` to determine exact Python versions.  
+   If ranges are specified, it selects the highest compatible version for better longevity.
+
+- **Multi-Source Dependency Analysis:**  
+   Goes beyond `requirements.txt` by scanning `Pipfile`, `tox.ini`, `Makefile`, and `pyproject.toml`.
+
+- **Multi-Language Build Intelligence:**  
+   Detects CMake, Make, PDM, setuptools, translating them into a unified build strategy.
+
+All of this happens through shell-based exploration commands, allowing the agent to mirror how an experienced SWE would manually investigate an unfamiliar repo.
+
+##### **3️. Dependency Inference (Build requirements analysis)**
+
+After exploration, RepoForge Agent infers the complete **build graph**:
+
+- **Automatic Build System Translation:** Converts mixed systems (e.g., cmake+python) into a consistent process.
+
+- **Complex Dependency Handling:** Identifies edge cases such as local C++ modules, ensuring those are included in the environment plan.
+
+##### **4️. Docker Environment Construction**
+
+Once dependencies are mapped, the agent constructs an isolated Docker environment:
+
+- **UV Package Manager:** Installs dependencies 10–100× faster than pip, with intelligent retries.
+
+- **Test Framework Normalization:** Converts pytest, tox, or custom runners into a single consistent `pytest` execution layer.
+
+- **Autonomous Shell Orchestration:** Dynamically builds Dockerfiles, caching layers where possible.
+
+##### **5️. RepoForge Harness Environment Validation**
+
+Before declaring success, the agent validates the environment by running actual tests inside the container:
+
+- **End-to-End Execution:** Tests are executed, not just dry-run, ensuring runtime compatibility.
+
+- **FAIL_TO_PASS / PASS_TO_PASS Tracking:** Checks that patches or environments improve correctness without regressions.
+
+- **Automated Rollbacks:** Any broken environment triggers a rollback and immediate remediation attempts.
+
+##### **6️. Validation Loop & Self-Improvement**
+
+If validation **fails**, the system doesn’t give up:
+
+- **Persistent Memory:** Every failure updates the agent’s internal knowledge graph.
+
+- **Cross-Repository Learning:** Strategies learned from one repo are generalized to others.
+
+- **Iterative Navigation:** After improvement, the agent loops back to repository navigation for another attempt.
+
+##### **7️. Executable SWE Task Generation**
+
+Once validation **succeeds**, the agent synthesizes **executable software engineering tasks** from the repository:
+
+- Patch-ready test specs are generated.
+
+- Each task is backed by an environment proven to build and run.
+
+#### **Why This is Revolutionary**
+
+**Zero Human Intervention:** Unlike SWE-bench, SWE-gym, or Skywork-SWE, no manual effort or template design is required.  
+ **Continuous Self-Improvement:** Learns from failures and gets smarter with every repo.  
+ **Complex Build System Support:** Handles C++ and hybrid build pipelines effortlessly.  
+ **Execution-Based Validation:** Doesn’t just build — it _runs_ tests to guarantee correctness.  
+ **Scalable Intelligence:** Each success feeds back into the system, improving future runs.
+
+##### **The Result:**
+
+- **7,304 fully validated, richly annotated SWE tasks** — generated automatically.
+
+- **937 optimized Docker images** powering all those tasks — with image reuse built in.
+
+- **19,000× lower labeling cost** compared to manual curation.
+
+#### **Why It Matters**
+
+By removing the need for manual dataset assembly, RepoForge Agent transforms SWE data from a scarce, precious resource into a **renewable fuel for training**.  
+ It turns the old paradigm — “we can’t scale without more data” — on its head:
+
+**More data, faster:** RepoForge Agent keeps discovering and validating new tasks continuously.  
+ **Better data:** SPICE filtering ensures only high‑confidence, high‑quality instances make it into your training set.  
+ **Massive cost savings:** Autonomous pipelines replace expensive human effort.
+
+**With RepoForge Agent, scarcity is no longer the bottleneck.**  
+ It’s the engine that powers state‑of‑the‑art SWE agents — like our RepoForge‑8B — on a fraction of the budget and compute.
+
+### Challenge 4
+
+#### **SPICE: Automated Difficulty Assessment at Scale**
+
+Our SPICE [^23] (Structured Problem Instance Classification Engine) system breaks this bottleneck by automatically assessing task difficulty and quality — at a fraction of the cost.
+
+How SPICE Works:
+
+- Multi-dimensional Analysis: Evaluates code complexity, repository structure, test coverage, and solution patterns
+- Automated Difficulty Scoring: Assigns difficulty levels based on quantitative metrics rather than subjective judgment
+- Quality Filtering: Automatically identifies high-value instances for training
+- Continuous Learning: Improves assessment accuracy over time based on model performance data
+
+Key Innovations:
+
+1. **Objective Metrics:** Uses concrete code analysis rather than subjective human judgment
+
+2. **Scalable Assessment:** Can label thousands of instances in minutes, not months
+
+3. **Consistent Standards:** Applies uniform criteria across all instances
+
+4. **Cost Efficiency:** Reduces labeling costs by 99.995% compared to manual annotation
+
+#### **Labeling Cost Comparison**
+
+| System                | Manual Hours | Cost per 1K Instances | Consistency  | Scalability   |
+| --------------------- | ------------ | --------------------- | ------------ | ------------- |
+| SWE-bench Verified    | 1,333 hrs    | $170,000+             | Variable     | Poor          |
+| Manual Expert Review  | 1,000 hrs    | $75,000+              | Subjective   | Poor          |
+| Crowdsourced Labeling | 500+ hrs     | $40,000+              | Inconsistent | Medium        |
+| **SPICE (Ours)**      | **25 hr**    | **$5.1**              | **Uniform**  | **Excellent** |
+
+#### **The Results**
+
+With SPICE, we've achieved:
+
+- 7000+ (From SWE-Gym and our crawled Data) instances automatically labeled and difficulty-assessed
+- 99.995% cost reduction compared to manual labeling on the SWE-Bench Data
+- 87.3% accuracy on issue clarity assessment and 68.5% on test coverage assessment
+- Rapid iteration capability for new datasets
+
+SPICE transforms data labeling from a bottleneck into an enabler, achieving 19,000× cost reduction (\$100,000 → \$5.10 per 1,000 instances) while maintaining 87.3% accuracy on issue clarity assessment.
+
+### Challenge 5
+
+#### Our Technical Solution: RepoForge-OH Scaffold
+
+To address these issues, we introduced **RepoForge-OH scaffold**, which inherits most of the OpenHands scaffold features and implemented 4 engineering tricks on top of SkyRL and OpenHands scaffold, achieving a **3x speedup**, making it more flexible for RL training.
+
+1. **Directly Tool Call Through Docker Exec:** The OpenHands scaffold’s runtime relies on a two-stage Docker build: it installs and launches an internal server inside a second image layer to handle model actions and observations. This approach incurs three major overheads at scale: repeated image builds, Docker network forwarding, and the internal server’s resource demands. Especially the second build stage, which consumes an extra 4–10 GB per image and makes large-scale training impractical. In our RepoForge-OH implementation, we eliminate both the embedded server and the second build by mounting the Python tools into the container and invoking them directly via `docker exec`. Because our system Python differs, we’ve back-ported the OpenHands utilities to run under Python 3.5. This direct-call strategy is **\~5x faster** than the original method, greatly reducing storage and runtime overhead while increasing flexibility during training.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-13.png" />
+</div>
+
+**Figure 13**: _Comparison of the OpenHands server–based runtime versus the Docker‐exec–based RepoForge‑OpenHands runtime architectures._
+
+Figure: Scaffold architecture overviews
+
+2. **Remote Sandbox Server:** We built a remote sandbox server to fully decouple environment execution from the training process. As mentioned in Challenge 2, by leveraging Ray, our implementation concurrently runs two training pipelines, each with up to 32 parallel agents, resulting in roughly 80–100 isolated containers on a single host.
+
+3. **Asynchronous Environment Executions:** Although SkyRL-OpenHands leverages `asyncio` and `call_sync_from_async` to dispatch workers concurrently, its reliance on Docker’s blocking HTTP client prevents true parallelism: Python’s Global Interpreter Lock (GIL) serializes I/O, so as the number of workers grows, the GIL spends increasingly more time switching between polling tasks. To eliminate this bottleneck, we replaced all blocking calls in the original scaffold with fully asynchronous libraries, such as aiodocker and aiohttp, thereby minimizing GIL contention and significantly reducing I/O overhead.
+
+4. **Handling the long tails:** In our early experiments, SkyRL’s default “balanced batching” strategy divides workload by number of instances evenly across workers and each worker generates all trajectories for its assigned instances. However, because some instances require considerably more time to rollout or evaluate, this approach creates “long tails” on slower workers, causing pipeline stalls before the backward pass and leaving GPUs and CPUs idle. To address this issue, we restructured the rollout stage using Ray into a producer–consumer architecture: workers dynamically poll (instance, trajectory ID) pairs rather than processing fixed subsets. In Figure 14, we demonstrate this on a batch of 8 instances with 4 workers generating 16 trajectories per instance; our producer–consumer design delivers a **1.4× speedup** on this workload.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-14.png" />
+</div>
+**Figure 14**: _Comparison of rollout distribution strategies \- Balanced
+Batching vs. Producer-consumer on RepoForge-OH scaffold._
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-15.png" />
+</div>
+**Figure 15**: _Comparison of running times \- OpenHands Scaffold vs.
+RepoForge-OH Scaffold on 40 training steps with the same dataset (not including
+build)._
+
+#### Results and Impact
+
+**3× End-to-End Speedup:** Overall training time dropped to one-third of the OpenHands baseline, enabling more experiments per day.
+
+**5× Faster Tool Invocation & 80% Storage Reduction:** Direct `docker exec` calls not only cut per-trajectory overhead fivefold but also reduced per-image disk usage by over 80%.
+
+**1.4× Throughput Gain on Long-Tail Batches:** Dynamic producer–consumer rollout smoothed idle time and improved resource utilization when workloads exhibit uneven execution times.
+
+**High-Density Concurrency:** Running two pipelines with up to 32 agents each (80–100 containers) on a single host slashed infrastructure costs and boosted fault isolation.
+
+**Practical Benefits:** These gains translate into lower cloud training expenses (≈ 65% reduction), shorter iteration cycles (from days to hours), and a more resilient RL pipeline—empowering faster research, development, and deployment of repository-level reinforcement-learning systems.
+
+## SFT Training Recipe
+
+With over 7,304 executable environments generated by RepoForge, the next critical challenge is ensuring data quality. While quantity is no longer a bottleneck, label fidelity and task difficulty remain major obstacles.
+
+#### **Step 1: SPICE-Based Data Filtering**
+
+Before applying rejection sampling, we use the SPICE system to automatically assess and filter the raw task instances across three key dimensions same as the criteria for swe-bench verified:
+
+- Task score: are the tasks well-specified?
+- Evaluation score: how valid are the evaluation criteria?
+- Difficulty score: how difficult are the tasks?
+
+###
+
+We then apply strict thresholds to select only the highest‑quality examples. Specifically, we retain only those instances with all three scores of 1 or lower in each dimension (i.e., tasks that are well‑specified or have only minor ambiguities, tests that provide perfect or good coverage, and problems of manageable complexity). This filtering step ensures our training set consists solely of well‑defined, properly tested, and appropriately challenging tasks, providing the clearest learning signals for downstream models.
+
+#### **Step 2: Teacher Model rejection sampling**
+
+For the filtered high-quality instances, we perform rejection sampling using a strong teacher model to generate solution trajectories:
+
+- Model: OpenHands-32B-Agent with RepoForge-OpenHands scaffold.
+- Evaluation Framework: RepoForge Harness for fast, reliable execution.
+- Success Criteria: All tests pass after applying the generated patch and the original test patch.
+
+During rejection sampling, the teacher model tackles each filtered instance in turn, proposing candidate patches and immediately validating them in the RepoForge environment. Any solution that fails to satisfy the success criteria is discarded, while those that pass are retained. For each successful instance, we then collect the full multi‑turn interaction trajectory generated by the teacher model.
+
+To further guard against overfitting or hallucination during training, we randomize the working directory for each rejection sampling run. By isolating file paths and environment state per instance, we ensure that the model trained on the collected trajectories doesn’t hallucinate during the evaluations.
+
+#### **Step 3: Final Dataset Preparation and Training**
+
+This rigorous filtering and sampling process yielded 1,202 high-confidence instances with corresponding solution trajectories.
+
+Each instance in our final SFT dataset has:
+
+- Clear, well-specified problem statements
+- Comprehensive test coverage
+- Appropriate difficulty level for learning
+- Validated solution trajectory from a scaffold specified teacher model
+
+**SFT Training**: These 1,202 instances were used to conduct multi-turn supervised fine-tuning (SFT) of the RepoForge-8B-Agent for 1 epoch, providing a solid foundation for subsequent reinforcement learning.
+
+## RL Training Recipe
+
+We adopt the CodeAct framework with the RepoForge-OH scaffold and the AsyncRollout mechanism from openhands to perform reinforcement learning on top of RepoForge-8B-Agent SFT.
+
+#### **Step 1: Runtime Setup**
+
+In the first step, we extend the RepoForge-OH scaffold—drawing inspiration from OpenHands—by defining three core action tools that the model can invoke at each turn. The `execute_bash` tool runs arbitrary shell commands under a configurable timeout; `str_replace_editor` allows the model to open, modify, or create files; and `finish` signals the end of a trajectory. At every interaction, the model emits one of these actions, the scaffold executes it, and the resulting output is fed back into the conversation as if it were a user message.
+
+#### **Step 2: Reward Design**
+
+We guide learning with a simple, binary execution-based reward. Whenever the model proposes a patch, an automated test harness applies it and runs the full test suite for that instance. If all tests pass, the model receives a reward of 1; if any test fails, it receives 0\.
+
+#### **Step 3: Dataset Preparation and Training**
+
+For training data, we assembled a single dataset of 160 problem instances sampled from our rejection-sampling pool. Each instance in the \`RepoForge-160-SeenSFT\` set was previously solved by OpenHands-Agent-32B (with eight rollout trajectories) and included during the supervised fine-tuning stage. This controlled subset ensures that the model begins RL with tasks it has already demonstrated competence on, focusing the reinforcement signal on refinement rather than discovery.
+
+**RL Training**: We trained the model on the RepoForge‑160‑SeenSFT dataset for 40 steps (two epochs), which took roughly four hours. During training, we used a temperature of 0.5, set the KL‑divergence coefficient to 0.001, and capped each trajectory at 35 iterations.
+
+<div align="center">
+  <img src="/imgs/blog-2/figure-16.png" />
+</div>
+
+**Figure 16:**
+
+## Evaluations
+
+We rigorously evaluated **RepoForge-8B‑Agent** on both the **RepoForge‑OpenHands** and the **official OpenHands evaluation framework**. The table below summarizes pass rates on SWE‑Bench‑Verified–style tasks across different models and setups.
+
+- **RepoForge-OH %**: Performance measured using our RepoForge harness.
+
+- **OpenHands %**: Performance measured with the official OpenHands harness.
+
+- **Reported %**: Scores reported in their original papers.
+
+- **Thinking**: Indicates whether the model uses explicit reasoning (e.g., chain‑of‑thought or scratchpad) or operates in a non‑thinking mode.
+
+| Model                                   | RepoForge-OH % | Openhands % | Reported % | Thinking |
+| --------------------------------------- | -------------- | ----------- | ---------- | -------- |
+| RepoForge-8B-Agent(SFT+RL)              | **17.4**       | **16.4**    | /          | No       |
+| RepoForge-8B-Agent(SFT Only)            | 12.7           | 10.5        | /          | No       |
+| R2EGym-7B-Agent [^19]                   | 9.6            | 10.2        | 19         | No       |
+| Qwen3-8b(Non-thinking)                  | 5              | 4.2         | /          | No       |
+| Seed-Coder-8B-Instruct [^20]            | 9.2            | 4.6         | 11.2       | No       |
+| SWE-Gym-OpenHands-7B-Agent              | 10.8           | 11.4        | 14.6       | No       |
+| all-hands/openhands-lm-7b-v0.1          | 11.2           | 15.4        | 10.6       | No       |
+| Qwen2.5-Coder-14B-Instruct              | 4.8            | 3.2         | /          | No       |
+| Qwen3-32B(non-thinking)                 | 17.4           | 9           | /          | No       |
+| Qwen3-14B(non-thinking)                 | 8              | 3           | /          | No       |
+| deepseek-ai/deepseek-coder-33b-instruct | 1.6            | 1.6         | /          | No       |
+| DeepCoder-14B-Preview [^21]             | 8              | 6.6         | /          | Yes      |
+| Qwen3-8B                                | **17.8**       | 11.4        | /          | Yes      |
+| Qwen3-32B                               | **/**          | 23%         | /          | Yes      |
+| QwQ-32B                                 | **/**          | 18.8%       | /          | Yes      |
+
+**RepoForge-8B‑Agent (SFT+RL)** achieves **17.4% on RepoForge‑OpenHands** and **16.4% on OpenHands**, setting a new SOTA among ≤8B models, even though it does _not_ use reasoning steps. RL adds significant performance gains: SFT‑only training plateaued at 12.7% on RepoForge‑OpenHands, while combining SFT with RL pushed accuracy to 17.4%. **RepoForge-8B‑Agent** matches or surpasses several 14B–32B‑scale models, proving that small models can punch well above their weight.
+
+## Lessons Learnt and Looking Ahead
+
+Through our experimentation with RepoForge-8B-Agent, we uncovered several critical insights about data quality, training strategy, and model capacity. These findings directly informed our training pipeline and system design.
+
+#### 1. Data Filtering is Critical
+
+Not all executable environments lead to effective training, data but quality matters more than quantity. We observed that:
+
+- **Randomly sampled data** from our environments produced only **3.0% accuracy** after supervised fine-tuning (SFT) even lower than baseline **Qwen-8B**.
+
+- In contrast, **SPICE-filtered, high-quality data** achieved **12.7% accuracy** under the same conditions — a **4.2× improvement**.
+
+- For reinforcement learning (RL), training on **random data** reached **6.5%**, while training on **filtered data** improved to **7.8%**.
+
+**Takeaway**: Automated filtering (e.g., with SPICE and rejection sampling) dramatically improves both SFT and RL outcomes.
+
+#### 2. Supervised Fine-Tuning is an Essential Warm Start for RL
+
+We experimented with applying RL directly on the base **Qwen3-8B** model without any SFT stage. The result:
+
+- RL without SFT reached **only 7.8%** accuracy on filtered data.
+
+- In contrast, applying RL **after** a brief SFT stage boosted accuracy to **17.4%** — more than **2× improvement**.
+
+Why? Without SFT, the model fails almost every task early on, receiving **zero reward** and no useful learning signal. SFT primes the model to solve a non-trivial fraction of tasks, enabling RL to reinforce and refine successful behaviors.
+
+**Takeaway**: SFT is not optional — it's **essential for enabling reward propagation** and effective RL.
+
+#### 3. Small Models Are Prone to Overfitting
+
+We investigated how the amount of SFT data affects small model performance. Surprisingly, more data did **not** always lead to better results:
+
+| SFT Dataset Size   | SWE-Bench Verified(%) |
+| ------------------ | --------------------- |
+| 500 trajectories   | 9.3                   |
+| 1,000 trajectories | **12.7**              |
+| 2,000 trajectories | 10.7                  |
+
+The Qwen-8B based model achieved its best accuracy at **1,000 trajectories**. Larger datasets led to overfitting, likely due to memorization and lack of generalization at this model scale.
+
+**Takeaway**: For small models, more data isn't always better — **careful dataset sizing and regularization** are key to avoiding overfitting.
+
+## Conclusions
+
+By unifying storage‑efficient sandboxing, a Ray‑powered evaluation harness, automated data generation, SPICE‑based labeling, and a bubble‑free RL scaffold, we have shown that even ≤8B models can reach new state‑of‑the‑art performance on demanding benchmarks like SWE‑Bench‑Verified.
+
+**Key takeaways:**  
+**Infrastructure matters:** Storage‑aware image pruning, distributed evaluation, and asynchronous rollout scheduling directly unlock faster iteration cycles, lower compute bills, and higher research velocity.
+
+**End‑to‑end automation wins:** From raw GitHub commits to fully validated RL trajectories, RepoForge eliminates costly manual steps and continuously improves through self‑feedback.
+
+**Quality over quantity:** SPICE filtering and rejection sampling proved that data fidelity — not sheer volume — is what drives better generalization in code LLMs.
+
+**Smaller can be stronger:** Careful data curation, SFT warm‑starts, and pipeline optimizations allow an 8B agent to match or exceed models several times its size.
+
+**Looking ahead**, we are extending RepoForge to support broader language ecosystems, integrating multi‑agent planning for long‑horizon tasks, and exploring continuous learning loops where deployed agents feed back fresh, validated data into the pipeline. Our vision is simple but ambitious: **a self‑improving, always‑on platform that pushes the boundaries of autonomous software engineering every single day.**
+
+RepoForge is not just a research prototype — it is a blueprint for the next generation of SWE agents at scale. We can’t wait to see what you build with it.
+
+---
+
+## Major Contributors
+
+- Core Contributors: Zhilong Chen and Chengzong Zhao
+- Project Lead: Boyuan Chen and Dayi Lin
+- Contributors: Yihao Chen, Arthur Leung, Gopi Krishnan Rajbahadur, Gustavo Oliva
+- Advisor: Ahmed Hassan
+
+Use the following for acknowledgement  
+We would also like to thank [Ying Sheng](https://sites.google.com/view/yingsheng/home), [Chenyang Zhao](https://zhaochenyang20.github.io/Chayenne/) from [SGLang](https://github.com/sgl-project/sglang) team for supporting SGLang async rollout integration, and [Kaichao You](https://youkaichao.github.io/research), [Simon Mo](https://github.com/simon-mo) from [vLLM](https://github.com/vllm-project/vllm) team for supporting vLLM performance optimization.
+
+## **Reference**
+
+[^1]: [Introducing SWE-bench Verified](https://openai.com/index/introducing-swe-bench-verified/)
+
+[^2]: [Ray: A distributed framework for emerging AI applications](https://github.com/ray-project/ray)
+
+[^3]: [OpenHands: An Open Platform for AI Software Developers](https://github.com/All-Hands-AI/OpenHands)
+
+[^4]: [Introducing OpenHands LM 32B \-- A Strong, Open Coding Agent Model](https://www.all-hands.dev/blog/introducing-openhands-lm-32b----a-strong-open-coding-agent-model)
+
+[^5]: [Sky-RL: A Modular Full-stack RL Library for LLMs](https://github.com/NovaSky-AI/SkyRL)
+
+[^6]: [Qwen3: Think Deeper, Act Faster](https://qwenlm.github.io/blog/qwen3/)
+
+[^7]: [Search-R1: Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning](https://arxiv.org/abs/2503.09516)
+
+[^8]: [MMSearch-R1: Incentivizing LMMs to Search](https://arxiv.org/abs/2506.20670)
+
+[^9]: [ToRL: Scaling Tool-Integrated RL](https://arxiv.org/abs/2503.23383)
+
+[^10]: [verl: Volcano Engine Reinforcement Learning for LLMs](https://github.com/volcengine/verl)
+
+[^11]: [RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning](https://arxiv.org/abs/2504.20073)
+
+[^12]: [ROLL: Reinforcement Learning Optimization for Large-Scale Learning](https://github.com/alibaba/ROLL)
+
+[^13]: [Agent Reinforcement Trainer (ART)](https://github.com/OpenPipe/ART)
+
+[^14]: [Training Software Engineering Agents and Verifiers with SWE-Gym](https://arxiv.org/abs/2412.21139)
+
+[^15]: [Skywork-SWE: Unveiling Data Scaling Laws for Software Engineering in LLMs](https://arxiv.org/abs/2506.19290)
+
+[^16]: [SWE-bench Goes Live\!](https://arxiv.org/abs/2505.23419)
+
+[^17]: [SWE-Factory: An Automatic Issue Resolution Dataset Construction Pipeline via LLM-based Multi Agents](https://arxiv.org/html/2506.10954v1)
+
+[^18]: [Qwen2.5: A Party of Foundation Models\!](https://qwenlm.github.io/blog/qwen2.5/)
+
+[^19]: [R2E-Gym Procedural Environment Generation and Hybrid Verifiers for Scaling Open-Weights SWE Agents](https://arxiv.org/abs/2504.07164)
+
+[^20]: [Seed-Coder: Let the Code Model Curate Data for Itself](https://arxiv.org/abs/2506.03524)
+
+[^21]: [DeepCoder: A Fully Open-Source 14B Coder at O3-mini Level](https://www.together.ai/blog/deepcoder)
+
+[^22]: [SWE-Bench-Harness](https://github.com/princeton-nlp/SWE-bench/blob/main/swebench/harness/utils.py)
+
+[^23]: [SPICE : An Automated SWE-Bench Labeling Pipeline for Issue Clarity, Test Coverage, and Effort Estimation](https://arxiv.org/abs/2507.09108)
