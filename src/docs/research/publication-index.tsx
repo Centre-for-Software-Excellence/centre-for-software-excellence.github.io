@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router';
 
 import { Badge } from '@/components/common/badge';
 import { Button } from '@/components/common/ui/button';
+import { Muted } from '@/components/md';
 import { Publication } from '@/config/home';
 import { usePublications } from '@/hooks/use-publications';
 
@@ -29,7 +30,9 @@ export default function PublicationIndex() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="relative before:fixed before:inset-0 before:-translate-x-full before:animate-loading before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent md:before:-translate-x-full">
+          <Muted className="animate-pulse">Loading…</Muted>
+        </div>
       </div>
     );
   }

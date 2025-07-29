@@ -41,7 +41,7 @@
     U+2215, U+FEFF, U+FFFD;
 }
 
-/* Geist Mono - Oblique (斜体还在开发中，使用 oblique) */
+/* Geist Mono - Oblique */
 @font-face {
   font-family: 'Geist Mono';
   font-style: oblique 0deg 15deg;
@@ -65,6 +65,43 @@
 
   --font-geist-sans: 'Geist', sans-serif;
   --font-geist-mono: 'Geist Mono', monospace;
+
+  --animate-loading: loading 1.5s infinite;
+
+  @keyframes loading {
+    0% {
+      opacity: 0;
+    }
+    35% {
+      opacity: 1;
+    }
+    65% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  --animate-expand-x: expand-x 0.7s ease-in-out forwards;
+  @keyframes expand-x {
+    0% {
+      transform: scaleX(0);
+    }
+    100% {
+      transform: scaleX(1);
+    }
+  }
+  --animate-expand-y: expand-y 0.7s ease-in-out forwards;
+  @keyframes expand-y {
+    0% {
+      transform: scaleY(0);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }
 }
 
 @theme inline {

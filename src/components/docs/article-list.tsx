@@ -153,7 +153,6 @@ export function ResearchList({ content, itemsPerPage = 5 }: ResearchListProps) {
   const gotoPage = (newPage: number) => {
     if (newPage < 1) newPage = 1;
     if (newPage > pageCount) newPage = pageCount;
-    console.log('setting page to ', newPage);
     setPage(newPage);
   };
 
@@ -186,7 +185,6 @@ export function BlogsList({ content, itemsPerPage = 5 }: BlogsListProps) {
   const gotoPage = (newPage: number) => {
     if (newPage < 1) newPage = 1;
     if (newPage > pageCount) newPage = pageCount;
-    console.log('setting page to ', newPage);
     setPage(newPage);
   };
 

@@ -6,6 +6,7 @@ import { UnderlineLink } from '@/components/common/underline-link';
 import { getSidebarUIConfig } from '@/config/ui';
 import { getDocsStructure, type DocSection } from '@/lib/docs/structure';
 import { cn } from '@/lib/utils';
+import { useUIStore } from '@/stores/ui';
 import { UnderlineText } from '../common/ui/underline-text';
 
 interface CollapsibleSectionProps {
@@ -80,17 +81,7 @@ function CollapsibleSection({
   );
 }
 
-export function DocsSidebar({
-  loading = false,
-  menuOpen,
-  onClickAction,
-  showSidebar = true,
-}: {
-  loading?: boolean;
-  menuOpen: boolean;
-  onClickAction: (open: boolean) => void;
-  showSidebar?: boolean;
-}) {
+export function DocsSidebar() {
   const docsStructure = getDocsStructure();
   const [openSections, setOpenSections] = useState<Set<string>>(
     new Set(docsStructure.map((section) => section.slug)),
@@ -110,6 +101,10 @@ export function DocsSidebar({
       return newSet;
     });
   };
+  const showSidebar = useUIStore((state) => state.showSidebar);
+  const loading = useUIStore((state) => state.loading);
+  const menuOpen = useUIStore((state) => state.menuOpen);
+  const setMenuOpen = useUIStore((state) => state.setMenuOpen);
   return showSidebar ? (
     <aside
       className={cn(
@@ -130,7 +125,7 @@ export function DocsSidebar({
             }}
             onSectionClick={() => {
               if (loading) return;
-              onClickAction(false);
+              setMenuOpen(false);
             }}
             loading={loading}
           />
@@ -164,7 +159,7 @@ export function DocsSidebar({
             key={link.title + idx}
             onClick={() => {
               setTimeout(() => {
-                onClickAction(false);
+                setMenuOpen(false);
               }, 0);
               navigate(link.href);
             }}

@@ -17,6 +17,7 @@ import { getHomeConfig } from '@/config/home';
 import { useBlogPosts } from '@/hooks/use-blog-posts';
 import { usePublications } from '@/hooks/use-publications';
 import { cn } from '@/lib/utils';
+import { useUIStore } from '@/stores/ui';
 import { CenterFlowGrid } from '../../components/visuals/center-flow-grid';
 import Layout from '../docs/layout';
 
@@ -107,7 +108,7 @@ function LatestBlogsSection({ blogsSection }: { blogsSection: BlogsSection }) {
 
   return (
     <section className="z-99 w-full overflow-hidden">
-      <Divider />
+      <Divider className="animate-expand-x" />
       <div className="relative mx-auto mt-16 flex max-w-4xl flex-col justify-center px-8 text-start">
         <div className="item-start flex justify-between">
           <h2 className="mb-4 h-8 text-xl font-bold md:text-2xl">{title}</h2>
@@ -318,8 +319,19 @@ export default function Page() {
     };
   }, []);
 
+  const setShowSidebar = useUIStore((state) => state.setShowSidebar);
+  const setShowFooter = useUIStore((state) => state.setShowFooter);
+  const setShowToc = useUIStore((state) => state.setShowToc);
+
+  useEffect(() => {
+    setShowSidebar(false);
+    // NOTE: the reason why we set showFooter to be false is that we need to add a footer here so the gsap absolute positioning works correctly, otherwise the footer from layout will be positioned weirdly on the page
+    setShowFooter(false);
+    setShowToc(false);
+  }, [setShowSidebar, setShowFooter, setShowToc]);
+
   return (
-    <Layout isArticle={false} showSidebar={false} showFooter={false}>
+    <Layout>
       <div ref={containerRef} className="min-h-screen w-full overflow-x-hidden">
         <div>
           {/* About Section */}

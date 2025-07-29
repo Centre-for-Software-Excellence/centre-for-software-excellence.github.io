@@ -203,7 +203,7 @@ export const CenterFlowGrid = forwardRef<
       >
         <span
           style={{
-            opacity: Math.max(0, scrollY < 300 ? 1 - scrollProgress : 0),
+            opacity: Math.max(0, scrollY < 300 ? 1 - scrollProgress : 0) || 0,
           }}
           className="transition-opacity duration-500"
         >

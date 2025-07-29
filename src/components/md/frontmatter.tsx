@@ -1,12 +1,12 @@
 import { cn } from '@/lib/utils';
 import { useContentStore } from '@/stores/content';
-import { useTocStore } from '@/stores/toc';
+import { useUIStore } from '@/stores/ui';
 import { H1, H4, Lead, Muted } from '.';
 import { Divider } from '../common/ui/divider';
 
 export function Frontmatter({ className }: { className?: string }) {
   const { frontmatter } = useContentStore();
-  const { headings } = useTocStore();
+  const showToc = useUIStore((state) => state.showToc);
   return (
     frontmatter && (
       <div className={cn('flex flex-col', className)}>
@@ -21,7 +21,7 @@ export function Frontmatter({ className }: { className?: string }) {
           <Muted className="w-full text-end">{frontmatter?.date}</Muted>
         </div>
         {Object.entries(frontmatter).length !== 0 && (
-          <Divider hasToc={headings.length > 0} />
+          <Divider hasToc={showToc} />
         )}
       </div>
     )
