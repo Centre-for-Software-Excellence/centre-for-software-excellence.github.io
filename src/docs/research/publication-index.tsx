@@ -80,7 +80,7 @@ export default function PublicationIndex() {
         </div>
         <div className="my-6">
           <h2 className="my-3 text-xl font-semibold">Abstract</h2>
-          <p className="leading-relaxed text-muted-foreground">
+          <p className="leading-relaxed text-accent-foreground/85">
             {publication.abstract}
           </p>
         </div>

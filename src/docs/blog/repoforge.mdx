@@ -74,7 +74,7 @@ In many existing SWE evaluation setups, each task is isolated in its own Docker 
 
 Prior work highlights how costly containerized environments can be: for example, SkyRL reports that each running environment may consume over one CPU and around 7 GB of storage, while a similar RL framework, rLLM, requires roughly 6 TB of disk space to store thousands of images [^24]. Even a moderate setup, such as 16 tasks with 8 rollouts each, can use over 100 CPUs and nearly 1 TB of disk space. Running just 500 SWE‑Bench‑Verified tasks already needs about 700 GB. Scaling to RepoForge’s 7,304 tasks would exceed 10 TB if the same approach were used.
 
-The problem gets worse with reinforcement learning and rejection sampling, where many containers run in parallel. For example, 128 concurrent tasks at 7 GB each need around 896 GB just for runtime. Running all 7,304 tasks with both base and runtime images would require around 61 TB, far beyond typical hardware.
+The problem gets worse with reinforcement learning and rejection sampling, where many containers run in parallel. For example, 128 concurrent tasks at 7 GB each need around 896 GB just for runtime. Running all 7,304 tasks with both base and runtime images would require around <span className="font-bold text-red-500">61 TB</span>, far beyond typical hardware.
 
 When storage becomes the bottleneck, CPUs sit idle waiting for disk resources, severely limiting training speed and efficiency.
 
