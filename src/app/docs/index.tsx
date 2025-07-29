@@ -8,6 +8,7 @@ import {
   type ResolvedDoc,
 } from '@/lib/docs/resolver';
 import { cn } from '@/lib/utils';
+import { useTocStore } from '@/stores/toc';
 import Layout from './layout';
 
 export default function DocsPage() {
@@ -43,11 +44,13 @@ export default function DocsPage() {
     loadDoc();
   }, [location.pathname]);
   const showSidebar = false; // disabled
+  const headings = useTocStore((state) => state.headings);
+  const hasToc = headings.length > 0;
 
   return (
     <Layout isArticle={isArticle} loading={loading} showSidebar={showSidebar}>
       {/* fake sidebar space for better article layout purpose, if we need add sidebar, just show the sidebar and remove this placeholder element*/}
-      {isArticle && (
+      {isArticle && hasToc && (
         <aside
           className={cn(
             'sticky top-12 hidden h-[calc(100vh-theme(spacing.12))] overflow-x-hidden overflow-y-auto border-border px-2 py-4 xl:flex xl:w-70 xl:shrink-0 xl:flex-col',
