@@ -4,7 +4,6 @@ import { Footer } from '@/components/docs/footer';
 import { DocsSidebar } from '@/components/docs/sidebar';
 import { TopBar } from '@/components/docs/top-bar';
 import { TableOfContent } from '@/components/md/table-of-content';
-import { cn } from '@/lib/utils';
 
 interface LayoutProps {
   children: React.ReactNode;
