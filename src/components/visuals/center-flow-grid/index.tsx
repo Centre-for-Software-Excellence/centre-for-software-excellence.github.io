@@ -39,7 +39,6 @@ export const CenterFlowGrid = forwardRef<
       window.removeEventListener('scroll', handleScroll);
     };
   });
-  console.log('scrollY', scrollY);
 
   const scrollProgress =
     scrollY / (document.documentElement.scrollHeight - window.innerHeight);

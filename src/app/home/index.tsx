@@ -45,7 +45,11 @@ function LatestResearchSection({
       <div className="relative mx-auto mt-16 flex max-w-4xl flex-col justify-center px-8 text-start">
         <div className="item-start flex justify-between">
           <h2 className="mb-4 h-8 text-xl font-bold md:text-2xl">{title}</h2>
-          <UnderlineLink href={base} className="flex h-8 items-center">
+          <UnderlineLink
+            href={base}
+            className="flex h-8 items-center"
+            aria-label="View all research"
+          >
             <span className="flex items-center gap-2">
               {viewAll} <ArrowRight className="ml-1 h-4 w-4" />
             </span>
@@ -59,7 +63,7 @@ function LatestResearchSection({
             <ResearchCard key={'research-' + idx} pub={pub} isArticle={true} />
           ))}
           <div className="flex w-full justify-end pr-12">
-            <Link to={base}>
+            <Link to={base} aria-label="View all research">
               <MoreHorizontal className="h-6 w-6 text-muted-foreground transition-all duration-300 ease-in-out hover:scale-120 hover:text-foreground dark:hover:text-active" />
             </Link>
           </div>
@@ -112,7 +116,11 @@ function LatestBlogsSection({ blogsSection }: { blogsSection: BlogsSection }) {
       <div className="relative mx-auto mt-16 flex max-w-4xl flex-col justify-center px-8 text-start">
         <div className="item-start flex justify-between">
           <h2 className="mb-4 h-8 text-xl font-bold md:text-2xl">{title}</h2>
-          <UnderlineLink href={base} className="flex h-8 items-center">
+          <UnderlineLink
+            href={base}
+            className="flex h-8 items-center"
+            aria-label="View all blogs"
+          >
             <span className="flex items-center gap-2">
               {viewAll} <ArrowRight className="ml-1 h-4 w-4" />
             </span>
@@ -214,10 +222,10 @@ function CollaboratorsSection({
     <section className="w-full py-20">
       <div className="relative">
         <div className="mx-auto mb-12 max-w-6xl px-8">
-          <h6 className="relateive w-full rounded-lg pt-4 text-xl font-bold md:p-4 md:text-2xl">
+          <h1 className="relateive w-full rounded-lg pt-4 text-xl font-bold md:p-4 md:text-2xl">
             <span className="text-zinc-400 dark:text-active">Our </span>
             {collaboratorsTitle}
-          </h6>
+          </h1>
         </div>
         <div
           ref={scrollRef}
@@ -349,7 +357,11 @@ export default function Page() {
                 <h1 className="my-6 text-3xl font-bold text-foreground md:text-5xl">
                   for Software Excellence
                 </h1>
-                <p className="mx-auto mb-12 max-w-3xl bg-radial from-background via-background/70 to-background/20 text-base leading-relaxed text-muted-foreground md:text-xl">
+                <p className="relative mx-auto mb-12 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-xl">
+                  <span
+                    className="absolute inset-0 -z-1 bg-radial from-background via-background/10 to-transparent"
+                    aria-hidden
+                  />
                   We are a team of researchers and innovators passionate about
                   exploring the frontiers of artificial intelligence and
                   software engineering.
@@ -357,6 +369,7 @@ export default function Page() {
                 <div className="relative mx-auto flex max-w-lg flex-col justify-center gap-6 sm:flex-row">
                   <Button className="left-0 rounded-full bg-foreground px-8 py-4 text-lg text-background transition-all duration-300 hover:scale-110 hover:border hover:border-foreground hover:bg-background hover:text-foreground sm:absolute">
                     <Link
+                      aria-label="View Research"
                       to="/docs/research"
                       className="flex items-center hover:no-underline"
                     >
@@ -367,8 +380,10 @@ export default function Page() {
                     variant="outline"
                     size="lg"
                     className="right-0 rounded-full bg-transparent px-8 py-4 text-lg sm:absolute"
+                    aria-label="Open Positions"
                   >
                     <Link
+                      aria-label="Open Positions"
                       to="https://huaweicanada.recruitee.com/?jobs-7d390cc9%5Bcity%5D%5B%5D=Kingston"
                       className="flex items-center hover:no-underline"
                     >
