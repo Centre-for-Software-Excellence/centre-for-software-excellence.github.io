@@ -39,6 +39,7 @@ export const CenterFlowGrid = forwardRef<
       window.removeEventListener('scroll', handleScroll);
     };
   });
+  console.log('scrollY', scrollY);
 
   const scrollProgress =
     scrollY / (document.documentElement.scrollHeight - window.innerHeight);
@@ -77,7 +78,7 @@ export const CenterFlowGrid = forwardRef<
     <div className={cn('h-screen w-screen', className)} ref={ref}>
       <svg
         className={cn(
-          'absolute top-0 h-[800px] w-full -translate-x-1/2',
+          'absolute top-0 h-[800px] w-[200vw] -translate-x-1/2 md:w-full',
           'left-1/2',
         )}
         viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
@@ -203,7 +204,7 @@ export const CenterFlowGrid = forwardRef<
       >
         <span
           style={{
-            opacity: Math.max(0, scrollY < 300 ? 1 - scrollProgress : 0) || 0,
+            opacity: Math.max(0, scrollY < 300 ? 1 - (scrollProgress || 0) : 0),
           }}
           className="transition-opacity duration-500"
         >

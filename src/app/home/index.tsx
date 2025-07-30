@@ -91,7 +91,7 @@ function LatestBlogsSection({ blogsSection }: { blogsSection: BlogsSection }) {
       end: () => {
         if (containerRef.current && blogRef.current) {
           const containerHeight = containerRef.current.offsetHeight;
-          const scrollDistance = containerHeight - blogRef.current.offsetHeight;
+          const scrollDistance = containerHeight - blogRef.current.clientHeight;
           return `+=${scrollDistance}`;
         }
         return '+=400';
@@ -179,11 +179,12 @@ function CollaboratorsSection({
 
       if (!isPaused) {
         setScrollPosition((prev) => {
-          const newPosition = prev + 0.07 * deltaTime;
+          const speed = 0.1;
+          const newPosition = prev + speed * deltaTime;
           const maxScroll = scrollContainer.scrollWidth / 2;
 
           if (newPosition >= maxScroll) {
-            return newPosition - maxScroll;
+            return newPosition - maxScroll + deltaTime;
           }
           return newPosition;
         });
