@@ -5,7 +5,6 @@
     "date": "2025-07-12",
     "authors": ["Dayi Lin", "Ahmed E Hassan", "Gopi Krishnan Rajbahadur"],
     "type": "Preprint",
-    "link": "/docs/research/spice-an-automated-swe-bench-labeling-pipeline-for-issue-clarity-test-coverage-and-effort-estimation",
     "paperLink": "https://arxiv.org/abs/2507.09108"
   },
   {
@@ -19,7 +18,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
-    "link": "/docs/research/context-aware-codellm-eviction-for-ai-assisted-coding",
     "paperLink": "https://arxiv.org/abs/2506.18796"
   },
   {
@@ -34,7 +32,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
-    "link": "/docs/research/adaptive-request-scheduling-for-codellm-serving-with-sla-guarantees",
     "paperLink": "https://arxiv.org/abs/2506.19677"
   },
   {
@@ -49,7 +46,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
-    "link": "/docs/research/towards-conversational-development-environments-using-theoryofmind-and-multiagent-architectures-for-requirements-refinement",
     "paperLink": "https://arxiv.org/pdf/2505.20973"
   },
   {
@@ -58,7 +54,6 @@
     "date": "2025-05-15",
     "authors": ["Ximing Dong", "Shaowei Wang", "Dayi Lin", "Ahmed E Hassan"],
     "type": "Preprint",
-    "link": "/docs/research/model-performance-guided-evaluation-data-selection-for-effective-prompt-optimization",
     "paperLink": "https://arxiv.org/abs/2505.10736"
   },
   {
@@ -81,7 +76,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Conference",
-    "link": "/docs/research/the-hitchhikers-guide-to-productionready-trustworthy-foundation-model-powered-software-fmware",
     "paperLink": "https://arxiv.org/pdf/2505.10640"
   },
   {
@@ -95,7 +89,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
-    "link": "/docs/research/sla-awareness-for-ai-assisted-coding",
     "paperLink": "https://arxiv.org/abs/2503.19876"
   },
   {
@@ -109,7 +102,6 @@
       "Dayi Lin"
     ],
     "type": "Preprint",
-    "link": "/docs/research/metasel-a-test-selection-approach-for-finetuned-dnn-models",
     "paperLink": "https://arxiv.org/pdf/2503.17534"
   },
   {
@@ -124,7 +116,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Journal",
-    "link": "/docs/research/simclone-detecting-tabular-data-clones-using-value-similarity",
     "paperLink": "https://arxiv.org/pdf/2407.12802"
   },
   {
@@ -141,7 +132,6 @@
       "Ashish Rajendra Sai"
     ],
     "type": "Journal",
-    "link": "/docs/research/a-framework-and-taxonomy-for-characterizing-the-applicability-of-software-architecture-recovery-approaches-a-tertiarymapping-study",
     "paperLink": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/spe.3364"
   },
   {
@@ -150,7 +140,6 @@
     "date": "2024-11-26",
     "authors": ["Jiahuei Lin", "Dayi Lin", "Sky Zhang", "Ahmed E Hassan"],
     "type": "Preprint",
-    "link": "/docs/research/engineering-ai-judge-systems",
     "paperLink": "https://arxiv.org/pdf/2411.17793"
   },
   {
@@ -159,7 +148,6 @@
     "date": "2024-11-14",
     "authors": ["Kirill Vasilevski", "Dayi Lin", "Ahmed E Hassan"],
     "type": "Preprint",
-    "link": "/docs/research/realtime-adapting-routing-rar-improving-efficiency-through-continuous-learning-in-software-powered-by-layered-foundation-models",
     "paperLink": "https://arxiv.org/pdf/2411.09837"
   },
   {
@@ -175,7 +163,6 @@
       "Hanan Lutfiyya"
     ],
     "type": "Preprint",
-    "link": "/docs/research/software-performance-engineering-for-foundation-model-powered-software-fmware",
     "paperLink": "https://arxiv.org/abs/2411.09580"
   },
   {
@@ -190,7 +177,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
-    "link": "/docs/research/watson-a-cognitive-observability-framework-for-the-reasoning-of-llmpowered-agents",
     "paperLink": "https://arxiv.org/pdf/2411.03455"
   },
   {
@@ -204,7 +190,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
-    "link": "/docs/research/from-cool-demos-to-productionready-fmware-core-challenges-and-a-technology-roadmap",
     "paperLink": "https://arxiv.org/pdf/2410.20791"
   },
   {
@@ -218,7 +203,6 @@
       "Dayi Lin"
     ],
     "type": "Journal",
-    "link": "/docs/research/teasma-a-practical-methodology-for-test-adequacy-assessment-of-deep-neural-networks",
     "paperLink": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10720834"
   },
   {
@@ -235,7 +219,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
-    "link": "/docs/research/promptexp-multigranularity-prompt-explanation-of-large-language-models",
     "paperLink": "https://arxiv.org/pdf/2410.13073"
   },
   {
@@ -250,7 +233,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Preprint",
-    "link": "/docs/research/towards-ainative-software-engineering-se-30-a-vision-and-a-challenge-roadmap",
     "paperLink": "https://arxiv.org/pdf/2410.06107"
   },
   {
@@ -265,7 +247,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
-    "link": "/docs/research/data-quality-antipatterns-for-software-analytics",
     "paperLink": "https://arxiv.org/pdf/2408.12560"
   },
   {
@@ -279,7 +260,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Conference",
-    "link": "/docs/research/a-tutorial-on-software-engineering-for-fmware",
     "paperLink": "https://dl.acm.org/doi/pdf/10.1145/3663529.3663820"
   },
   {
@@ -301,7 +281,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Conference",
-    "link": "/docs/research/rethinking-software-engineering-in-the-era-of-foundation-models-a-curated-catalogue-of-challenges-in-the-development-of-trustworthy-fmware",
     "paperLink": "https://dl.acm.org/doi/pdf/10.1145/3663529.3663849"
   },
   {
@@ -316,7 +295,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Conference",
-    "link": "/docs/research/keeping-deep-learning-models-in-check-a-historybased-approach-to-mitigate-overfitting",
     "paperLink": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10533733"
   },
   {
@@ -325,7 +303,6 @@
     "date": "2024-04-29",
     "authors": ["Ximing Dong", "Dayi Lin", "Shaowei Wang", "Ahmed E Hassan"],
     "type": "Preprint",
-    "link": "/docs/research/a-framework-for-realtime-safeguarding-the-text-generation-of-large-language-model",
     "paperLink": "https://arxiv.org/pdf/2404.19048"
   },
   {
@@ -340,7 +317,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Preprint",
-    "link": "/docs/research/rethinking-software-engineering-in-the-foundation-model-era-from-taskdriven-ai-copilots-to-goaldriven-ai-pair-programmers",
     "paperLink": "https://arxiv.org/pdf/2404.10225"
   },
   {
@@ -354,7 +330,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Conference",
-    "link": "/docs/research/technical-brief-on-software-engineering-for-fmware",
     "paperLink": "https://dl.acm.org/doi/pdf/10.1145/3639478.3643062"
   },
   {
@@ -369,7 +344,6 @@
       "Zhen Ming Jack Jiang"
     ],
     "type": "Conference",
-    "link": "/docs/research/an-empirical-comparison-on-the-results-of-different-clone-detection-setups-for-c-based-projects",
     "paperLink": "https://dl.acm.org/doi/10.1145/3510458.3513025"
   },
   {
@@ -385,7 +359,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Conference",
-    "link": "/docs/research/towards-training-reproducible-deep-learning-models",
     "paperLink": "https://dl.acm.org/doi/pdf/10.1145/3510003.3510163"
   },
   {
@@ -400,7 +373,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Conference",
-    "link": "/docs/research/towards-build-verifiability-for-java-based-systems",
     "paperLink": "https://dl.acm.org/doi/10.1145/3510003.3510184"
   },
   {
@@ -409,7 +381,6 @@
     "date": "2022-05-09",
     "authors": ["Xu Yang", "Gopi Krishnan Rajbahadur", "Dayi Lin"],
     "type": "Patent",
-    "link": "/docs/research/systems-methods-and-nontransitory-computerreadable-storage-devices-for-detecting-and-analyzing-data-clones-in-tabular-datasets",
     "paperLink": "https://patentimages.storage.googleapis.com/22/01/b9/3637dd26320e1f/US20240152578A1.pdf"
   },
   {
@@ -423,7 +394,6 @@
       "Zhenming Jiang"
     ],
     "type": "Patent",
-    "link": "/docs/research/systems-methods-and-nontransitory-computerreadable-storage-devices-for-training-deep-learning-and-neural-network-models-using-overfitting-detection-and-prevention",
     "paperLink": "https://patentimages.storage.googleapis.com/b4/93/d7/8259f2f4d693d6/US20240152805A1.pdf"
   },
   {
@@ -438,7 +408,6 @@
       "Zhen Ming Jack Jiang"
     ],
     "type": "Journal",
-    "link": "/docs/research/towards-a-consistent-interpretation-of-aiops-models",
     "paperLink": "https://dl.acm.org/doi/pdf/10.1145/3488269"
   },
   {
@@ -455,7 +424,6 @@
       "Daniel M German"
     ],
     "type": "Preprint",
-    "link": "/docs/research/can-i-use-this-publicly-available-dataset-to-build-commercial-ai-softwarea-case-study-on-publicly-available-image-datasets",
     "paperLink": "https://arxiv.org/pdf/2111.02374"
   },
   {
@@ -470,7 +438,6 @@
       "Zhen Ming Jiang"
     ],
     "type": "Journal",
-    "link": "/docs/research/an-experience-report-on-producing-verifiable-builds-for-large-scale-commercial-systems",
     "paperLink": "https://ieeexplore.ieee.org/document/9462847"
   },
   {
@@ -483,7 +450,6 @@
       "Ahmed E Hassan"
     ],
     "type": "Journal",
-    "link": "/docs/research/the-impact-of-data-merging-on-the-interpretation-of-crossproject-justintime-defect-models",
     "paperLink": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9408228"
   },
   {
@@ -492,7 +458,6 @@
     "date": "2021-05-03",
     "authors": ["Boyuan Chen", "Zhen Ming Jiang"],
     "type": "Journal",
-    "link": "/docs/research/a-survey-of-software-log-instrumentation",
     "paperLink": "https://dl.acm.org/doi/10.1145/3456634"
   }
 ]

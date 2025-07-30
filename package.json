@@ -11,7 +11,8 @@
     "preview": "vite preview --port 5173 --host",
     "build-index": "tsx ./src/lib/docs/build-index.ts",
     "generate-blogs": "tsx src/lib/generate-blogs.ts",
-    "prepare": "npm run build-index && npm run generate-blogs"
+    "prepare": "npm run build-index && npm run generate-blogs",
+    "validate": "tsx ./src/scripts/validate-data.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
