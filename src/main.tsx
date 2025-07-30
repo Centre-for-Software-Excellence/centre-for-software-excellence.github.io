@@ -6,6 +6,8 @@ import { ThemeProvider } from '@/components/common/theme-provider';
 
 import '@/styles/index.css';
 
+import { Loading } from './components/common/ui/loading';
+
 const Docs = lazy(() => import('@/app/docs'));
 const Home = lazy(() => import('@/app/home'));
 
@@ -13,7 +15,7 @@ const router = createBrowserRouter([
   {
     path: '/docs/*',
     element: (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading size="screen" />}>
         <Docs />
       </Suspense>
     ),
@@ -21,7 +23,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading size="screen" />}>
         <Home />
       </Suspense>
     ),
