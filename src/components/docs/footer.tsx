@@ -8,7 +8,7 @@ export function Footer() {
   return (
     <footer className="relative h-32 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <span
-        className="animate-expand-x absolute top-0 h-px w-full bg-[linear-gradient(to_right,transparent_0%,var(--border)_10%,var(--border)_90%,transparent_100%)]"
+        className="absolute top-0 h-px w-full animate-expand-x bg-[linear-gradient(to_right,transparent_0%,var(--border)_10%,var(--border)_90%,transparent_100%)]"
         aria-hidden
       />
       <div className="flex h-full w-full flex-col gap-4 p-6 py-8 lg:px-8">
@@ -27,6 +27,7 @@ export function Footer() {
                   (link, index) =>
                     !link.disabled && (
                       <UnderlineLink
+                        aria-label={link.title}
                         href={link.href}
                         key={index}
                         position="middle"

@@ -27,6 +27,7 @@ export function ModeToggle({
         'bg-transparent hover:bg-transparent dark:hover:bg-transparent',
         className,
       )}
+      aria-label="Toggle theme"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
     >
       {theme === 'light' ? (

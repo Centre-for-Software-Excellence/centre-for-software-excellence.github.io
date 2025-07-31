@@ -1,21 +1,32 @@
-import { StrictMode } from 'react';
+import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
-import Docs from '@/app/docs';
-import Home from '@/app/home';
 import { ThemeProvider } from '@/components/common/theme-provider';
 
 import '@/styles/index.css';
 
+import { Loading } from './components/common/ui/loading';
+
+const Docs = lazy(() => import('@/app/docs'));
+const Home = lazy(() => import('@/app/home'));
+
 const router = createBrowserRouter([
   {
     path: '/docs/*',
-    element: <Docs />,
+    element: (
+      <Suspense fallback={<Loading size="screen" />}>
+        <Docs />
+      </Suspense>
+    ),
   },
   {
     path: '/',
-    element: <Home />,
+    element: (
+      <Suspense fallback={<Loading size="screen" />}>
+        <Home />
+      </Suspense>
+    ),
   },
 ]);
 

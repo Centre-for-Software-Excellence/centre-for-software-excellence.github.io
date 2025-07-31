@@ -66,6 +66,32 @@
   --font-geist-sans: 'Geist', sans-serif;
   --font-geist-mono: 'Geist Mono', monospace;
 
+  --animate-text-loading: text-loading 1.5s infinite ease-in-out;
+  @keyframes text-loading {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  --animate-loading-2: loading-2 1.5s infinite ease-in-out;
+  @keyframes loading-2 {
+    0% {
+      transform: scaleX(0);
+    }
+    50% {
+      transform: scaleX(1);
+    }
+    100% {
+      transform: scaleX(0);
+    }
+  }
+
   --animate-loading: loading 1.5s infinite;
 
   @keyframes loading {
