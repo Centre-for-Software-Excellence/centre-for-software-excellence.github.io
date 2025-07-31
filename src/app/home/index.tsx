@@ -277,7 +277,10 @@ export default function Page() {
       // document.body.clientHeight - 128,
       gsap.to(backgroundRef.current, {
         // body height - footer height (leave it on top of footer)
-        y: document.body.clientHeight - 128,
+        y:
+          document.body.scrollHeight -
+          128 -
+          backgroundRef.current.clientHeight / 2,
         ease: 'none',
         scrollTrigger: {
           trigger: document.body,
