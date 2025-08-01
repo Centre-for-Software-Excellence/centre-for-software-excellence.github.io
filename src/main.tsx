@@ -6,19 +6,15 @@ import { ThemeProvider } from '@/components/common/theme-provider';
 
 import '@/styles/index.css';
 
+import Docs from '@/app/docs';
 import { Loading } from './components/common/ui/loading';
 
-const Docs = lazy(() => import('@/app/docs'));
 const Home = lazy(() => import('@/app/home'));
 
 const router = createBrowserRouter([
   {
     path: '/docs/*',
-    element: (
-      <Suspense fallback={<Loading size="screen" />}>
-        <Docs />
-      </Suspense>
-    ),
+    element: <Docs />,
   },
   {
     path: '/',

@@ -16,14 +16,13 @@ export function ResearchCard({
     date: string;
     authors: string[];
     type: string;
-    link: string;
   };
   className?: string;
   isArticle?: boolean;
 }) {
   return (
     <Link
-      to={`/docs/research/publication-index?title=${encodeURIComponent(pub.title)}`}
+      to={`/docs/research/publication-index/title=${encodeURIComponent(pub.title)}`}
       className={cn('group w-full', className)}
     >
       <Card
@@ -70,13 +69,13 @@ export function ResearchCard({
         <div className="relative mb-8 flex w-full items-center justify-center overflow-x-visible">
           <span
             className={cn(
-              'animate-expand-x absolute left-1/2 h-px w-full -translate-x-1/2 bg-[linear-gradient(to_right,transparent_0%,var(--border)_10%,var(--border)_90%,transparent_100%)]',
+              'absolute left-1/2 h-px w-full -translate-x-1/2 animate-expand-x bg-[linear-gradient(to_right,transparent_0%,var(--border)_10%,var(--border)_90%,transparent_100%)]',
               isArticle ? 'md:w-4xl' : 'md:w-[calc(90vw-17.5rem)]',
             )}
           />
           <span
             className={cn(
-              'animate-expand-x absolute left-1/2 h-px w-full -translate-x-1/2 scale-x-0 bg-[linear-gradient(to_right,transparent_0%,var(--foreground)_10%,var(--foreground)_90%,transparent_100%)] opacity-0 transition-all duration-300 ease-in-out group-hover:scale-x-100 group-hover:opacity-100 dark:bg-[linear-gradient(to_right,transparent_0%,var(--color-active)_10%,var(--color-active)_90%,transparent_100%)]',
+              'absolute left-1/2 h-px w-full -translate-x-1/2 scale-x-0 animate-expand-x bg-[linear-gradient(to_right,transparent_0%,var(--foreground)_10%,var(--foreground)_90%,transparent_100%)] opacity-0 transition-all duration-300 ease-in-out group-hover:scale-x-100 group-hover:opacity-100 dark:bg-[linear-gradient(to_right,transparent_0%,var(--color-active)_10%,var(--color-active)_90%,transparent_100%)]',
 
               isArticle ? 'md:w-4xl' : 'md:w-[calc(90vw-17.5rem)]',
             )}
