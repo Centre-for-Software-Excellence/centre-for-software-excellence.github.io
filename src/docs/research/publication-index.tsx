@@ -1,41 +1,35 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router';
+import { Link } from 'react-router';
 
 import { Badge } from '@/components/common/badge';
 import { Button } from '@/components/common/ui/button';
-import { Muted } from '@/components/md';
 import { Publication } from '@/config/home';
 import { usePublications } from '@/hooks/use-publications';
+import { useUIStore } from '@/stores/ui';
 
-export default function PublicationIndex() {
-  const [searchParams] = useSearchParams();
+export default function PublicationIndex({ title }: { title: string }) {
   const [publication, setPublication] = useState<Publication | null>(null);
-  const [loading, setLoading] = useState(true);
   const publications = usePublications();
+  const setLoading = useUIStore((state) => state.setLoading);
 
   useEffect(() => {
-    const title = searchParams.get('title');
-    if (!title) {
-      setLoading(false);
-      return;
+    try {
+      const decodedTitle = decodeURIComponent(title);
+      if (!decodedTitle || !decodedTitle.trim()) {
+        setLoading(false);
+        return;
+      }
+      const foundPublication = publications.find(
+        (pub) => pub.title === decodedTitle,
+      );
+      setPublication(foundPublication || null);
+    } catch (error) {
+      console.error('Error decoding title:', error);
+      setPublication(null);
     }
-
-    const foundPublication = publications.find((pub) => pub.title === title);
-
-    setPublication(foundPublication || null);
     setLoading(false);
-  }, [searchParams, publications]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="relative before:fixed before:inset-0 before:-translate-x-full before:animate-loading before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent md:before:-translate-x-full">
-          <Muted className="animate-pulse">Loading…</Muted>
-        </div>
-      </div>
-    );
-  }
+  }, [title, publications, setLoading]);
 
   if (!publication) {
     return (
