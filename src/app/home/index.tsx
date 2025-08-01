@@ -185,14 +185,15 @@ function CollaboratorsSection({
       if (!lastTime) lastTime = currentTime;
       const deltaTime = currentTime - lastTime;
 
+      // Only auto-scroll if not paused and user is not interacting
       if (!isPaused) {
         setScrollPosition((prev) => {
-          const speed = 0.1;
+          const speed = 0.04;
           const newPosition = prev + speed * deltaTime;
           const maxScroll = scrollContainer.scrollWidth / 2;
 
           if (newPosition >= maxScroll) {
-            return newPosition - maxScroll + deltaTime;
+            return newPosition - maxScroll + 1.2 * deltaTime;
           }
           return newPosition;
         });
@@ -204,10 +205,41 @@ function CollaboratorsSection({
 
     animationId = requestAnimationFrame(animate);
 
+    const handleHorizontalScroll = (event: WheelEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const scrollLeft = scrollContainer.scrollLeft;
+      const maxScroll =
+        scrollContainer.scrollWidth - scrollContainer.clientWidth;
+      const totalWidth = scrollContainer.scrollWidth;
+      const halfWidth = totalWidth / 2;
+
+      const scrollDelta = event.deltaY;
+      let newScrollLeft = scrollLeft + scrollDelta;
+
+      // hanlde boundaries
+      if (newScrollLeft < 0) {
+        // left bound
+        newScrollLeft = halfWidth + newScrollLeft;
+      } else if (newScrollLeft > maxScroll) {
+        // right bound
+        newScrollLeft = newScrollLeft - maxScroll;
+      }
+
+      scrollContainer.scrollLeft = newScrollLeft;
+      setScrollPosition(newScrollLeft);
+    };
+
+    scrollContainer.addEventListener('wheel', handleHorizontalScroll, {
+      passive: false, // Changed to false to allow preventDefault
+    });
+
     return () => {
       if (animationId) {
         cancelAnimationFrame(animationId);
       }
+      scrollContainer.removeEventListener('wheel', handleHorizontalScroll);
     };
   }, [isPaused]);
 
