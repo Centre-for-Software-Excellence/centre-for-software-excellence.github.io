@@ -1,31 +1,60 @@
 [
   {
     "title": "SPICE: An Automated SWE-Bench Labeling Pipeline for Issue Clarity, Test Coverage, and Effort Estimation",
-    "abstract": "We introduce SPICE, a scalable, automated pipeline for labeling SWE-bench-style datasets with annotations for issue clarity, test coverage, and effort estimation. SPICE combines context-aware code navigation, rationale-driven prompting, and multi-pass consensus to produce labels that closely approximate expert annotations. Our evaluation shows that SPICE achieves high inter-annotator agreement and can be used to improve the quality of software engineering datasets.",
+    "abstract": "High-quality labeled datasets are crucial for training and evaluating foundation models in software engineering, but creating them is often prohibitively expensive and labor-intensive. We introduce SPICE, a scalable, automated pipeline for labeling SWE-bench-style datasets with annotations for issue clarity, test coverage, and effort estimation. SPICE combines context-aware code navigation, rationale-driven prompting, and multi-pass consensus to produce labels that closely approximate expert annotations. SPICE's design was informed by our own experience and frustration in labeling more than 800 instances from SWE-Gym. SPICE achieves strong agreement with human-labeled SWE-bench Verified data while reducing the cost of labeling 1,000 instances from around $100,000 (manual annotation) to just $5.10. These results demonstrate SPICE's potential to enable cost-effective, large-scale dataset creation for SE-focused FMs. To support the community, we release both SPICE tool and SPICE Bench, a new dataset of 6,802 SPICE-labeled instances curated from 291 open-source projects in SWE-Gym (over 13x larger than SWE-bench Verified).",
     "date": "2025-07-12",
-    "authors": ["Dayi Lin", "Ahmed E Hassan", "Gopi Krishnan Rajbahadur"],
+    "authors": [
+      "Aaditya Bhatia",
+      "Gustavo A Oliva",
+      "Gopi Krishnan Rajbahadur",
+      "Haoxiang Zhang",
+      "Yihao Chen",
+      "Zhilong Chen",
+      "Arthur Leung",
+      "Dayi Lin",
+      "Boyuan Chen",
+      "Ahmed E Hassan"
+    ],
     "type": "Preprint",
     "paperLink": "https://arxiv.org/abs/2507.09108"
   },
   {
     "title": "Context-Aware CodeLLM Eviction for AI-assisted Coding",
-    "abstract": "We present a context-aware eviction strategy for CodeLLMs in AI-assisted coding environments. Our approach considers the contextual relevance and usage patterns of code completions to optimize memory utilization and response time. The method demonstrates improved performance in resource-constrained environments while maintaining code suggestion quality.",
+    "abstract": "AI-assisted coding tools powered by Code Large Language Models (CodeLLMs) are increasingly integrated into modern software development workflows. To address concerns around privacy, latency, and model customization, many enterprises opt to self-host these models. However, the diversity and growing number of CodeLLMs, coupled with limited accelerator memory, introduce practical challenges in model management and serving efficiency. This paper presents CACE, a novel context-aware model eviction strategy designed specifically to optimize self-hosted CodeLLM serving under resource constraints. Unlike traditional eviction strategies based solely on recency (e.g., Least Recently Used), CACE leverages multiple context-aware factors, including model load time, task-specific latency sensitivity, expected output length, and recent usage and future demand tracked through a sliding window. We evaluate CACE using realistic workloads that include both latency-sensitive code completion and throughput-intensive code reasoning tasks. Our experiments show that CACE reduces Time-to-First-Token (TTFT) and end-to-end (E2E) latency, while significantly lowering the number of model evictions compared to state-of-the-art systems. Ablation studies further demonstrate the importance of multi-factor eviction in balancing responsiveness and resource efficiency. This work contributes practical strategies for deploying scalable, low-latency AI coding assistants in real-world software engineering environments.",
     "date": "2025-06-23",
     "authors": [
       "Kishanthan Thangarajah",
       "Boyuan Chen",
-      "Shengjie Chang",
+      "Shi Chang",
       "Ahmed E Hassan"
     ],
     "type": "Preprint",
     "paperLink": "https://arxiv.org/abs/2506.18796"
   },
   {
+    "title": "A Tutorial on Software Engineering for FMware",
+    "abstract": "Foundation Models (FMs) like GPT-4 have given rise to FMware, FM-powered applications representing a new generation of software that is developed under new paradigms. FMware has been widely adopted in both software engineering (SE) research (e.g., test generation) and industrial products (e.g., GitHub copilot), despite the numerous challenges introduced by the stochastic nature of FMs. In our tutorial, we will present the latest research and industry practices in engineering FMware. Our tutorial's perspective is firmly rooted in SE rather than artificial intelligence (AI), ensuring its accessibility to FSE participants.",
+    "date": "2025-06-23",
+    "authors": [
+      "Filipe R. Cogo",
+      "Gopi Krishnan Rajbahadur",
+      "Dayi Lin",
+      "Keheliya Gallaba",
+      "Benjamin Rombaut",
+      "Gustavo Oliva",
+      "Jiahuei Lin",
+      "Kirill Vasilevski",
+      "Ahmed E Hassan"
+    ],
+    "type": "Conference",
+    "paperLink": "https://dl.acm.org/doi/pdf/10.1145/3696630.3728621"
+  },
+  {
     "title": "Adaptive Request Scheduling for CodeLLM Serving with SLA Guarantees",
-    "abstract": "We present an adaptive request scheduling system for serving Code Large Language Models (CodeLLMs) with Service Level Agreement (SLA) guarantees. Our approach dynamically adjusts scheduling policies based on request characteristics and system load to optimize both throughput and latency while maintaining SLA compliance. Experimental results show significant improvements in serving efficiency compared to static scheduling approaches.",
+    "abstract": "Code Large Language Models (CodeLLMs) are increasingly integrated into modern software development workflows, yet efficiently serving them in resource-constrained, self-hosted environments remains a significant challenge. Existing LLM serving systems employs Continuous Batching for throughput improvement. However, they rely on static batch size configurations that cannot adapt to fluctuating request rates or heterogeneous workloads, leading to frequent SLA (Service Level Agreement) violations and unstable performance. In this study, We propose SABER, a dynamic batching strategy that predicts per-request SLA feasibility and adjusts decisions in real time. SABER improves goodput by up to 26% over the best static configurations and reduces latency variability by up to 45%, all without manual tuning or service restarts. Our results demonstrate that SLA-aware, adaptive scheduling is key to robust, high-performance CodeLLM serving.",
     "date": "2025-06-24",
     "authors": [
-      "Shengjie Chang",
+      "Shi Chang",
       "Boyuan Chen",
       "Kishanthan Thangarajah",
       "Hanan Lutfiyya",
@@ -36,7 +65,7 @@
   },
   {
     "title": "Towards Conversational Development Environments: Using Theory-of-Mind and Multi-Agent Architectures for Requirements Refinement",
-    "abstract": "Foundation Models (FMs) have shown remarkable capabilities in various natural language tasks. However, their ability to accurately capture stakeholder requirements remains a significant challenge for using FMs for software development. This paper introduces a novel approach that leverages an FM-powered multi-agent system called AlignMind to address this issue. By having a cognitive architecture that enhances FMs with Theory-of-Mind capabilities, our approach considers the mental states and perspectives of software makers. This allows our solution to iteratively clarify the beliefs, desires, and intentions of stakeholders, translating these into a set of refined requirements and a corresponding actionable natural language workflow in the often-overlooked requirements refinement phase of software engineering, which is crucial after initial elicitation.",
+    "abstract": "Foundation Models (FMs) have shown remarkable capabilities in various natural language tasks. However, their ability to accurately capture stakeholder requirements remains a significant challenge for using FMs for software development. This paper introduces a novel approach that leverages an FM-powered multi-agent system called AlignMind to address this issue. By having a cognitive architecture that enhances FMs with Theory-of-Mind capabilities, our approach considers the mental states and perspectives of software makers. This allows our solution to iteratively clarify the beliefs, desires, and intentions of stakeholders, translating these into a set of refined requirements and a corresponding actionable natural language workflow in the often-overlooked requirements refinement phase of software engineering, which is crucial after initial elicitation. Through a multifaceted evaluation covering 150 diverse use cases, we demonstrate that our approach can accurately capture the intents and requirements of stakeholders, articulating them as both specifications and a step-by-step plan of action. Our findings suggest that the potential for significant improvements in the software development process justifies these investments. Our work lays the groundwork for future innovation in building intent-first development environments, where software makers can seamlessly collaborate with AIs to create software that truly meets their needs.",
     "date": "2025-05-27",
     "authors": [
       "Keheliya Gallaba",
@@ -50,7 +79,7 @@
   },
   {
     "title": "Model Performance-Guided Evaluation Data Selection for Effective Prompt Optimization",
-    "abstract": "Optimizing Large Language Model (LLM) performance requires well-crafted prompts, but manual prompt engineering is labor-intensive and often ineffective. Automated prompt optimization techniques address this challenge but the majority of them rely on randomly selected evaluation subsets, which fail to represent the full dataset, leading to unreliable evaluations and suboptimal prompts. Existing coreset selection methods, designed for LLM benchmarking, are unsuitable for prompt optimization due to challenges in clustering similar samples, high data collection costs, and the unavailability of performance data for new or private datasets.",
+    "abstract": "Optimizing Large Language Model (LLM) performance requires well-crafted prompts, but manual prompt engineering is labor-intensive and often ineffective. Automated prompt optimization techniques address this challenge but the majority of them rely on randomly selected evaluation subsets, which fail to represent the full dataset, leading to unreliable evaluations and suboptimal prompts. Existing coreset selection methods, designed for LLM benchmarking, are unsuitable for prompt optimization due to challenges in clustering similar samples, high data collection costs, and the unavailability of performance data for new or private datasets. To overcome these issues, we propose IPOMP, an Iterative evaluation data selection for effective Prompt Optimization using real-time Model Performance. IPOMP is a two-stage approach that selects representative and diverse samples using semantic clustering and boundary analysis, followed by iterative refinement with real-time model performance data to replace redundant samples. Evaluations on the BIG-bench dataset show that IPOMP improves effectiveness by 1.6% to 5.3% and stability by at least 57% compared with SOTA baselines, with minimal computational overhead below 1%. Furthermore, the results demonstrate that our real-time performance-guided refinement approach can be universally applied to enhance existing coreset selection methods.",
     "date": "2025-05-15",
     "authors": ["Ximing Dong", "Shaowei Wang", "Dayi Lin", "Ahmed E Hassan"],
     "type": "Preprint",
@@ -58,7 +87,7 @@
   },
   {
     "title": "The Hitchhikers Guide to Production-ready Trustworthy Foundation Model powered Software (FMware)",
-    "abstract": "Foundation Models (FMs) such as Large Language Models (LLMs) are reshaping the software industry by enabling FMware, systems that integrate these FMs as core components. In this KDD 2025 tutorial, we present a comprehensive exploration of FMware that combines a curated catalogue of challenges with real-world production concerns. We first discuss the state of research and practice in building FMware. We further examine the difficulties in selecting suitable models, aligning high-quality domain-specific data, engineering robust prompts, and orchestrating autonomous agents.",
+    "abstract": "Foundation Models (FMs) such as Large Language Models (LLMs) are reshaping the software industry by enabling FMware, systems that integrate these FMs as core components. In this KDD 2025 tutorial, we present a comprehensive exploration of FMware that combines a curated catalogue of challenges with real-world production concerns. We first discuss the state of research and practice in building FMware. We further examine the difficulties in selecting suitable models, aligning high-quality domain-specific data, engineering robust prompts, and orchestrating autonomous agents. We then address the complex journey from impressive demos to production-ready systems by outlining issues in system testing, optimization, deployment, and integration with legacy software. Drawing on our industrial experience and recent research in the area, we provide actionable insights and a technology roadmap for overcoming these challenges. Attendees will gain practical strategies to enable the creation of trustworthy FMware in the evolving technology landscape.",
     "date": "2025-05-15",
     "authors": [
       "Kirill Vasilevski",
@@ -66,7 +95,7 @@
       "Gopi Krishnan Rajbahadur",
       "Gustavo A Oliva",
       "Keheliya Gallaba",
-      "Filipe R Cogo",
+      "Filipe R. Cogo",
       "Jiahuei Lin",
       "Dayi Lin",
       "Haoxiang Zhang",
@@ -80,11 +109,11 @@
   },
   {
     "title": "SLA-Awareness for AI-assisted coding",
-    "abstract": "We introduce SLA-aware mechanisms for AI-assisted coding systems that ensure service level agreement compliance while providing code suggestions. Our approach balances code quality, response time, and system reliability to meet specified SLA requirements. The system demonstrates consistent performance across various coding scenarios and workloads.",
+    "abstract": "The integration of AI-assisted coding tools within development environments drastically reduces development time, and allows developers to focus more on creative and critical aspects of software engineering through the use of Code Large Language Models (CodeLLMs). These coding assistants automate repetitive and time-consuming coding tasks such as code generation, code completion, code summarization, and code translation. Responsiveness is a crucial requirement of these coding assistants to maintain real-time interactivity, such that their use does not impede the developers' workflows. Different coding tasks have unique characteristics and latency requirements: Time-To-First-Token (TTFT) latency is essential for code completion tasks, while End-To-End (E2E) latency is crucial for code translation tasks. Managing these varying requirements simultaneously while optimizing resource usage poses significant challenges. Existing work adopts the Model-as-a-Service paradigm for serving individual CodeLLMs, but cannot effectively manage latency requirements of concurrent coding tasks and sequences of CodeLLM inference calls, due to a lack of end-to-end latency awareness. Another challenge is keeping resource utilization high, when the serving system is deployed on a shared cluster environment. To address these challenges, we propose Coding Assistant Task Orchestrator (CATO), a runtime system designed to serve a diverse assortment of coding tasks while meeting latency requirements and maximizing resource utilization. Our experiments demonstrate that when all types of coding tasks were served simultaneously, for TTFT-critical tasks, CATO improves overall Goodput rate and resource utilization by up to 10% and 41.1%, respectively. P95 E2E latency was also reduced by 18% for code summarization tasks, and P95 TTFT for code generation tasks were reduced by 14% compared against state-of-the-art systems.",
     "date": "2025-03-25",
     "authors": [
       "Kishanthan Thangarajah",
-      "Alex Leung",
+      "Arthur Leung",
       "Boyuan Chen",
       "Ahmed E Hassan"
     ],
@@ -106,7 +135,7 @@
   },
   {
     "title": "Simclone: detecting tabular data clones using value similarity",
-    "abstract": "Data clones are defined as multiple copies of the same data among datasets. The presence of data clones between datasets can cause issues such as difficulties in managing data assets and data license violations when using datasets with clones to build AI software. However, detecting data clones is not trivial. The majority of the prior studies in this area rely on structural information to detect data clones (e.g., font size, column header). However, tabular datasets used to build AI software are typically stored without any structural information.",
+    "abstract": "Data clones are defined as multiple copies of the same data among datasets. The presence of data clones between datasets can cause issues such as difficulties in managing data assets and data license violations when using datasets with clones to build AI software. However, detecting data clones is not trivial. The majority of the prior studies in this area rely on structural information to detect data clones (e.g., font size, column header). However, tabular datasets used to build AI software are typically stored without any structural information. In this article, we propose a novel method called SimClone for data clone detection in tabular datasets without relying on structural information. SimClone method utilizes value similarities for data clone detection. We also propose a visualization approach as a part of our SimClone method to help locate the exact position of the cloned data between a dataset pair.",
     "date": "2025-01-21",
     "authors": [
       "Xu Yang",
@@ -120,7 +149,7 @@
   },
   {
     "title": "A Framework and Taxonomy for Characterizing the Applicability of Software Architecture Recovery Approaches: A Tertiary‐Mapping Study",
-    "abstract": "Software architecture assists developers in addressing non-functional requirements and in maintaining, debugging, and upgrading their software systems. Consequently, consistency between the designed architecture and the implemented software system itself is important; without this consistency the non-functional requirements targeted may not be addressed and architectural documentation may mis-direct maintenance efforts that target the associated code-base.",
+    "abstract": "Software architecture assists developers in addressing non-functional requirements and in maintaining, debugging, and upgrading their software systems. Consequently, consistency between the designed architecture and the implemented software system itself is important; without this consistency the non-functional requirements targeted may not be addressed and architectural documentation may mis-direct maintenance efforts that target the associated code-base. But often, when software is initially implemented or subsequently evolved, the designed architecture and software architecture become inconsistent, with the implemented structure degraded due to issues like developer time-pressures, or ambiguous communication of the designed architecture. In such cases, Software Architecture Recovery (SAR) or consistency approaches can be applied to reconstruct the architecture of the software system and possibly to compare it to/re-align it with the designed architecture. Many SAR approaches have been proposed in the research. However, choosing an appropriate architecture recovery approach for software systems is still an open issue. Consequently, this research aims to conduct a tertiary-mapping study based on available secondary studies of architecture recovery approaches, to uncover important characteristics, towards the selection of appropriate SAR approaches. This research has aggregated 13 secondary studies and 10 primary studies beyond 2020 from 5 databases and, in doing so, identified 111 architecture recovery approaches. Based on these approaches, a taxonomy, containing nine main SAR-selection categories is proposed and a framework (in the form of a supporting tool to help developers select an appropriate SAR approach) has been developed. Finally, this research identifies six potential open research gaps related to the underlying research that could be helpful for guiding research in the future.",
     "date": "2024-07-17",
     "authors": [
       "Abdul Qayum",
@@ -136,7 +165,7 @@
   },
   {
     "title": "Engineering AI Judge Systems",
-    "abstract": "AI judge systems are designed to automatically evaluate Foundation Model-powered software (i.e., FMware). Due to the intrinsic dynamic and stochastic nature of FMware, the development of AI judge systems requires a unique engineering life cycle and presents new challenges. In this paper, we discuss the challenges based on our industrial experiences in developing AI judge systems for FMware. These challenges lead to substantial time consumption, cost and inaccurate judgments.",
+    "abstract": "AI judge systems are designed to automatically evaluate Foundation Model-powered software (i.e., FMware). Due to the intrinsic dynamic and stochastic nature of FMware, the development of AI judge systems requires a unique engineering life cycle and presents new challenges. In this paper, we discuss the challenges based on our industrial experiences in developing AI judge systems for FMware. These challenges lead to substantial time consumption, cost and inaccurate judgments. We propose a framework that tackles the challenges with the goal of improving the productivity of developing high-quality AI judge systems. Finally, we evaluate our framework with a case study on judging a commit message generation FMware. The accuracy of the judgments made by the AI judge system developed with our framework outperforms those made by the AI judge system that is developed without our framework by up to 6.2%, with a significant reduction in development effort.",
     "date": "2024-11-26",
     "authors": ["Jiahuei Lin", "Dayi Lin", "Sky Zhang", "Ahmed E Hassan"],
     "type": "Preprint",
@@ -144,7 +173,7 @@
   },
   {
     "title": "Real-time Adapting Routing (RAR): Improving Efficiency Through Continuous Learning in Software Powered by Layered Foundation Models",
-    "abstract": "To balance the quality and inference cost of a Foundation Model (FM, such as large language models (LLMs)) powered software, people often opt to train a routing model that routes requests to FMs with different sizes and capabilities. Existing routing models rely on learning the optimal routing decision from carefully curated data, require complex computations to be updated, and do not consider the potential evolution of weaker FMs.",
+    "abstract": "To balance the quality and inference cost of a Foundation Model (FM, such as large language models (LLMs)) powered software, people often opt to train a routing model that routes requests to FMs with different sizes and capabilities. Existing routing models rely on learning the optimal routing decision from carefully curated data, require complex computations to be updated, and do not consider the potential evolution of weaker FMs. In this paper, we propose Real-time Adaptive Routing (RAR), an approach to continuously adapt FM routing decisions while using guided in-context learning to enhance the capabilities of weaker FM. The goal is to reduce reliance on stronger, more expensive FMs. We evaluate our approach on different subsets of the popular MMLU benchmark. Over time, our approach routes 50.2% fewer requests to computationally expensive models while maintaining around 90.5% of the general response quality. In addition, the guides generated from stronger models have shown intra-domain generalization and led to a better quality of responses compared to an equivalent approach with a standalone weaker FM.",
     "date": "2024-11-14",
     "authors": ["Kirill Vasilevski", "Dayi Lin", "Ahmed E Hassan"],
     "type": "Preprint",
@@ -152,22 +181,23 @@
   },
   {
     "title": "Software Performance Engineering for Foundation Model-Powered Software (FMware)",
-    "abstract": "We present a comprehensive approach to software performance engineering specifically designed for Foundation Model-powered software (FMware). Our methodology addresses the unique performance challenges posed by integrating foundation models into software systems, including latency optimization, resource management, and scalability considerations. The framework provides practical guidelines for developing high-performance FMware applications.",
+    "abstract": "The rise of Foundation Models (FMs) like Large Language Models (LLMs) is revolutionizing software development. Despite the impressive prototypes, transforming FMware into production-ready products demands complex engineering across various domains. A critical but overlooked aspect is performance engineering, which aims at ensuring FMware meets performance goals such as throughput and latency to avoid user dissatisfaction and financial loss. Often, performance considerations are an afterthought, leading to costly optimization efforts post-deployment. FMware's high computational resource demands highlight the need for efficient hardware use. Continuous performance engineering is essential to prevent degradation. This paper highlights the significance of Software Performance Engineering (SPE) in FMware, identifying four key challenges: cognitive architecture design, communication protocols, tuning and optimization, and deployment. These challenges are based on literature surveys and experiences from developing an in-house FMware system. We discuss problems, current practices, and innovative paths for the software engineering community.",
     "date": "2024-11-14",
     "authors": [
       "Haoxiang Zhang",
-      "Shengjie Chang",
-      "Alex Leung",
+      "Shi Chang",
+      "Arthur Leung",
       "Kishanthan Thangarajah",
       "Boyuan Chen",
-      "Hanan Lutfiyya"
+      "Hanan Lutfiyya",
+      "Ahmed E Hassan"
     ],
     "type": "Preprint",
     "paperLink": "https://arxiv.org/abs/2411.09580"
   },
   {
     "title": "Watson: A Cognitive Observability Framework for the Reasoning of LLM-Powered Agents",
-    "abstract": "As foundation models (FMs) play an increasingly prominent role in complex software systems, such as agentic software, they introduce significant observability and debuggability challenges. Although recent Large Reasoning Models (LRMs) generate their thought processes as part of the output, in many scenarios fast-thinking Large Language Models (LLMs) are still preferred due to latency constraints. LLM-powered agents operate autonomously with opaque implicit reasoning, making it difficult to debug their unexpected behaviors or errors.",
+    "abstract": "As foundation models (FMs) play an increasingly prominent role in complex software systems, such as agentic software, they introduce significant observability and debuggability challenges. Although recent Large Reasoning Models (LRMs) generate their thought processes as part of the output, in many scenarios fast-thinking Large Language Models (LLMs) are still preferred due to latency constraints. LLM-powered agents operate autonomously with opaque implicit reasoning, making it difficult to debug their unexpected behaviors or errors. In this paper, we introduce Watson, a novel framework that provides reasoning observability into the implicit reasoning processes of agents driven by fast-thinking LLMs, allowing the identification and localization of errors and guidance for corrections. We demonstrate the accuracy of the recovered implicit reasoning trace by Watson and its usefulness through debugging and improving the performance of LLM-powered agents in two scenarios: Massive Multitask Language Understanding (MMLU) benchmark and SWE-bench-lite. Using Watson, we were able to observe and identify the implicit reasoning errors, and automatically provide targeted corrections at runtime that improve the Pass@1 of agents on MMLU and SWE-bench-lite by 7.58 (13.45% relative improvement) and 7.76 (12.31% relative improvement) percentage points, respectively, without updates to models or the cognitive architecture of the agents.",
     "date": "2024-11-05",
     "authors": [
       "Benjamin Rombaut",
@@ -194,7 +224,7 @@
   },
   {
     "title": "Teasma: A practical methodology for test adequacy assessment of deep neural networks",
-    "abstract": "Successful deployment of Deep Neural Networks (DNNs), particularly in safety-critical systems, requires their validation with an adequate test set to ensure a sufficient degree of confidence in test outcomes. Although well-established test adequacy assessment techniques from traditional software, such as mutation analysis and coverage criteria, have been adapted to DNNs in recent years, we still need to investigate their application within a comprehensive methodology for accurately predicting the fault detection ability of test sets and thus assessing their adequacy.",
+    "abstract": "Successful deployment of Deep Neural Networks (DNNs), particularly in safety-critical systems, requires their validation with an adequate test set to ensure a sufficient degree of confidence in test outcomes. Although well-established test adequacy assessment techniques from traditional software, such as mutation analysis and coverage criteria, have been adapted to DNNs in recent years, we still need to investigate their application within a comprehensive methodology for accurately predicting the fault detection ability of test sets and thus assessing their adequacy. In this paper, we propose and evaluate TEASMA, a comprehensive and practical methodology designed to accurately assess the adequacy of test sets for DNNs. In practice, TEASMA allows engineers to decide whether they can trust high-accuracy test results and thus validate the DNN before its deployment. Based on a DNN model's training set, TEASMA provides a procedure to build accurate DNN-specific prediction models of the Fault Detection Rate (FDR) of a test set using an existing adequacy metric, thus enabling its assessment. We evaluated TEASMA with four state-of-the-art test adequacy metrics: Distance-based Surprise Coverage (DSC), Likelihood-based Surprise Coverage (LSC), Input Distribution Coverage (IDC), and Mutation Score (MS). We calculated MS based on mutation operators that directly modify the trained DNN model (i.e., post-training operators) due to their significant computational advantage compared to the operators that modify the DNN's training set or program (i.e., pre-training operators). Our extensive empirical evaluation, conducted across multiple DNN models and input sets, including large input sets such as ImageNet, reveals a strong linear correlation between the predicted and actual FDR values derived from MS, DSC, and IDC, with minimum R2 values of 0.94 for MS and 0.90 for DSC and IDC. Furthermore, a low average Root Mean Square Error (RMSE) of 9% between actual and predicted FDR values across all subjects, when relying on regression analysis and MS, demonstrates the latter's superior accuracy when compared to DSC and IDC, with RMSE values of 0.17 and 0.18, respectively. Overall, these results suggest that TEASMA provides a reliable basis for confidently deciding whether to trust test results for DNN models.",
     "date": "2024-10-17",
     "authors": [
       "Amin Abbasishahkoo",
@@ -207,7 +237,7 @@
   },
   {
     "title": "Promptexp: Multi-granularity prompt explanation of large language models",
-    "abstract": "Large Language Models excel in tasks like natural language understanding and text generation. Prompt engineering plays a critical role in leveraging LLM effectively. However, LLMs black-box nature hinders its interpretability and effective prompting engineering. A wide range of model explanation approaches have been developed for deep learning models, However, these local explanations are designed for single-output tasks like classification and regression,and cannot be directly applied to LLMs, which generate sequences of tokens.",
+    "abstract": "Large Language Models excel in tasks like natural language understanding and text generation. Prompt engineering plays a critical role in leveraging LLM effectively. However, LLMs black-box nature hinders its interpretability and effective prompting engineering. A wide range of model explanation approaches have been developed for deep learning models, However, these local explanations are designed for single-output tasks like classification and regression,and cannot be directly applied to LLMs, which generate sequences of tokens. Recent efforts in LLM explanation focus on natural language explanations, but they are prone to hallucinations and inaccuracies. To address this, we introduce PromptExp , a framework for multi-granularity prompt explanations by aggregating token-level insights. PromptExp introduces two token-level explanation approaches: 1. an aggregation-based approach combining local explanation techniques, and 2. a perturbation-based approach with novel techniques to evaluate token masking impact. PromptExp supports both white-box and black-box explanations and extends explanations to higher granularity levels, enabling flexible analysis. We evaluate PromptExp in case studies such as sentiment analysis, showing the perturbation-based approach performs best using semantic similarity to assess perturbation impact. Furthermore, we conducted a user study to confirm PromptExp's accuracy and practical value, and demonstrate its potential to enhance LLM interpretability.",
     "date": "2024-10-16",
     "authors": [
       "Ximing Dong",
@@ -223,7 +253,7 @@
   },
   {
     "title": "Towards AI-Native Software Engineering (SE 3.0): A Vision and a Challenge Roadmap",
-    "abstract": "The rise of AI-assisted software engineering (SE 2.0), powered by Foundation Models (FMs) and FM-powered copilots, has shown promise in improving developer productivity. However, it has also exposed inherent limitations, such as cognitive overload on developers and inefficiencies. We propose a shift towards Software Engineering 3.0 (SE 3.0), an AI-native approach characterized by intent-first, conversation-oriented development between human developers and AI teammates.",
+    "abstract": "The rise of AI-assisted software engineering (SE 2.0), powered by Foundation Models (FMs) and FM-powered copilots, has shown promise in improving developer productivity. However, it has also exposed inherent limitations, such as cognitive overload on developers and inefficiencies. We propose a shift towards Software Engineering 3.0 (SE 3.0), an AI-native approach characterized by intent-first, conversation-oriented development between human developers and AI teammates. SE 3.0 envisions AI systems evolving beyond task-driven copilots into intelligent collaborators, capable of deeply understanding and reasoning about software engineering principles and intents. We outline the key components of the SE 3.0 technology stack, which includes Teammate.next for adaptive and personalized AI partnership, IDE.next for intent-first conversation-oriented development, Compiler.next for multi-objective code synthesis, and Runtime.next for SLA-aware execution with edge-computing support. Our vision addresses the inefficiencies and cognitive strain of SE 2.0 by fostering a symbiotic relationship between human developers and AI, maximizing their complementary strengths. We also present a roadmap of challenges that must be overcome to realize our vision of SE 3.0. This paper lays the foundation for future discussions on the role of AI in the next era of software engineering.",
     "date": "2024-10-08",
     "authors": [
       "Ahmed E Hassan",
@@ -250,21 +280,8 @@
     "paperLink": "https://arxiv.org/pdf/2408.12560"
   },
   {
-    "title": "A Tutorial on Software Engineering for FMware",
-    "abstract": "Foundation Models (FMs) like GPT-4 have given rise to FMware, FM-powered applications representing a new generation of software that is developed with new roles, assets, and paradigms. FMware has been widely adopted in both software engineering (SE) research (e.g., test generation) and industrial products (e.g., GitHub copilot), despite the numerous challenges introduced by the stochastic nature of FMs.",
-    "date": "2024-07-10",
-    "authors": [
-      "Filipe Roseiro Cogo",
-      "Gopi Krishnan Rajbahadur",
-      "Dayi Lin",
-      "Ahmed E Hassan"
-    ],
-    "type": "Conference",
-    "paperLink": "https://dl.acm.org/doi/pdf/10.1145/3663529.3663820"
-  },
-  {
     "title": "Rethinking software engineering in the era of foundation models: A curated catalogue of challenges in the development of trustworthy fmware",
-    "abstract": "Foundation models (FMs), such as Large Language Models (LLMs), have revolutionized software development by enabling new use cases and business models. We refer to software built using FMs as FMware. The unique properties of FMware (e.g., prompts, agents and the need for orchestration), coupled with the intrinsic limitations of FMs (e.g., hallucination) lead to a completely new set of software engineering challenges.",
+    "abstract": "Foundation models (FMs), such as Large Language Models (LLMs), have revolutionized software development by enabling new use cases and business models. We refer to software built using FMs as FMware. The unique properties of FMware (e.g., prompts, agents and the need for orchestration), coupled with the intrinsic limitations of FMs (e.g., hallucination) lead to a completely new set of software engineering challenges. Based on our industrial experience, we identified ten key SE4FMware challenges that have caused enterprise FMware development to be unproductive, costly, and risky. For each of those challenges, we state the path for innovation that we envision. We hope that the disclosure of the challenges will not only raise awareness but also promote deeper and further discussions, knowledge sharing, and innovative solutions.",
     "date": "2024-07-10",
     "authors": [
       "Ahmed E Hassan",
@@ -285,7 +302,7 @@
   },
   {
     "title": "Keeping deep learning models in check: A history-based approach to mitigate overfitting",
-    "abstract": "In software engineering, deep learning models are increasingly deployed for critical tasks such as bug detection and code review. However, overfitting remains a challenge that affects the quality, reliability, and trustworthiness of software systems that utilize deep learning models. Overfitting can be (1) prevented (e.g., using dropout or early stopping) or (2) detected in a trained model (e.g., using correlation-based approaches).",
+    "abstract": "In software engineering, deep learning models are increasingly deployed for critical tasks such as bug detection and code review. However, overfitting remains a challenge that affects the quality, reliability, and trustworthiness of software systems that utilize deep learning models. Overfitting can be (1) prevented (e.g., using dropout or early stopping) or (2) detected in a trained model (e.g., using correlation-based approaches). Both overfitting detection and prevention approaches that are currently used have constraints (e.g., requiring modification of the model structure, and high computing resources). In this paper, we propose a simple, yet powerful approach that can both detect and prevent overfitting based on the training history (i.e., validation losses). Our approach first trains a time series classifier on training histories of overfit models. This classifier is then used to detect if a trained model is overfit. In addition, our trained classifier can be used to prevent overfitting by identifying the optimal point to stop a model’s training. We evaluate our approach on its ability to identify and prevent overfitting in real-world samples. We compare our approach against correlation-based detection approaches and the most commonly used prevention approach (i.e., early stopping). Our approach achieves an F1 score of 0.91 which is at least 5% higher than the current best-performing non-intrusive overfitting detection approach. Furthermore, our approach can stop training to avoid overfitting at least 32% of the times earlier than early stopping and has the same or a better rate of returning the best model.",
     "date": "2024-05-17",
     "authors": [
       "Hao Li",
@@ -299,7 +316,7 @@
   },
   {
     "title": "A Framework for Real-time Safeguarding the Text Generation of Large Language Model",
-    "abstract": "Large Language Models (LLMs) have significantly advanced natural language processing (NLP) tasks but also pose ethical and societal risks due to their propensity to generate harmful content. Existing methods have limitations, including the need for training specific control models and proactive intervention during text generation, that lead to quality degradation and increased computational overhead.",
+    "abstract": "Large Language Models (LLMs) have significantly advanced natural language processing (NLP) tasks but also pose ethical and societal risks due to their propensity to generate harmful content. Existing methods have limitations, including the need for training specific control models and proactive intervention during text generation, that lead to quality degradation and increased computational overhead. To mitigate those limitations, we propose LLMSafeGuard, a lightweight real-time framework that integrates an external validator into decoding, rejecting unsafe outputs while allowing valid ones. We introduce a similarity-based validation approach, simplifying constraint introduction and eliminating the need for control model training. Additionally, LLMSafeGuard employs a context-wise timing selection strategy, intervening LLMs only when necessary. We evaluate LLMSafeGuard on detoxification and copyright safeguarding, demonstrating its superiority over SOTA baselines. In detoxification, LLMSafeGuard reduces toxic output by at least 38.6% while preserving linguistic quality. Additionally, its context-wise timing selection cuts inference time by at least 24.2% without compromising effectiveness.",
     "date": "2024-04-29",
     "authors": ["Ximing Dong", "Dayi Lin", "Shaowei Wang", "Ahmed E Hassan"],
     "type": "Preprint",
@@ -307,7 +324,7 @@
   },
   {
     "title": "Rethinking Software Engineering in the Foundation Model Era: From Task-Driven AI Copilots to Goal-Driven AI Pair Programmers",
-    "abstract": "The advent of Foundation Models (FMs) and AI-powered copilots has transformed the landscape of software development, offering unprecedented code completion capabilities and enhancing developer productivity. However, the current task-driven nature of these copilots falls short in addressing the broader goals and complexities inherent in software engineering (SE). In this paper, we propose a paradigm shift towards goal-driven AI-powered pair programmers that collaborate with human developers in a more holistic and context-aware manner.",
+    "abstract": "The advent of Foundation Models (FMs) and AI-powered copilots has transformed the landscape of software development, offering unprecedented code completion capabilities and enhancing developer productivity. However, the current task-driven nature of these copilots falls short in addressing the broader goals and complexities inherent in software engineering (SE). In this paper, we propose a paradigm shift towards goal-driven AI-powered pair programmers that collaborate with human developers in a more holistic and context-aware manner. We envision AI pair programmers that are goal-driven, human partners, SE-aware, and self-learning. These AI partners engage in iterative, conversation-driven development processes, aligning closely with human goals and facilitating informed decision-making. We discuss the desired attributes of such AI pair programmers and outline key challenges that must be addressed to realize this vision. Ultimately, our work represents a shift from AI-augmented SE to AI-transformed SE by replacing code completion with a collaborative partnership between humans and AI that enhances both productivity and software quality.",
     "date": "2024-04-16",
     "authors": [
       "Ahmed E Hassan",
@@ -321,11 +338,11 @@
   },
   {
     "title": "Technical Brief on Software Engineering for FMware",
-    "abstract": "Foundation Models (FM) like GPT-4 have given rise to FMware, FM-powered applications, which represent a new generation of software that is developed with new roles, assets, and paradigms. FMware has been widely adopted in both software engineering (SE) research (e.g., test generation) and industrial products (e.g., GitHub copilot), despite the numerous challenges introduced by the stochastic nature of FMs.",
+    "abstract": "Foundation Models (FM) like GPT-4 have given rise to FMware, FM-powered applications, which represent a new generation of software that is developed with new roles, assets, and paradigms. FMware has been widely adopted in both software engineering (SE) research (e.g., test generation) and industrial products (e.g., GitHub copilot), despite the numerous challenges introduced by the stochastic nature of FMs. Such challenges jeopardize the quality and trustworthiness of FMware. In our technical brief, we will present the latest research and industrial practices in engineering FMware, and discuss the SE challenges and opportunities facing both researchers and practitioners in the FMware era.",
     "date": "2024-04-14",
     "authors": [
       "Dayi Lin",
-      "Filipe Roseiro Cogo",
+      "Filipe R. Cogo",
       "Gopi Krishnan Rajbahadur",
       "Ahmed E Hassan"
     ],
@@ -341,14 +358,14 @@
       "Jinfu Chen",
       "Yong Shi",
       "Boyuan Chen",
-      "Zhen Ming Jack Jiang"
+      "Zhen Ming Jiang"
     ],
     "type": "Conference",
     "paperLink": "https://dl.acm.org/doi/10.1145/3510458.3513025"
   },
   {
     "title": "Towards training reproducible deep learning models",
-    "abstract": "Reproducibility is an increasing concern in Artificial Intelligence (AI), particularly in the area of Deep Learning (DL). Being able to reproduce DL models is crucial for AI-based systems, as it is closely tied to various tasks like training, testing, debugging, and auditing. However, DL models are challenging to be reproduced due to issues like randomness in the software (e.g., DL algorithms) and non-determinism in the hardware (e.g., GPU).",
+    "abstract": "Reproducibility is an increasing concern in Artificial Intelligence (AI), particularly in the area of Deep Learning (DL). Being able to reproduce DL models is crucial for AI-based systems, as it is closely tied to various tasks like training, testing, debugging, and auditing. However, DL models are challenging to be reproduced due to issues like randomness in the software (e.g., DL algorithms) and non-determinism in the hardware (e.g., GPU). There are various practices to mitigate some of the aforementioned issues. However, many of them are either too intrusive or can only work for a specific usage context. In this paper, we propose a systematic approach to training reproducible DL models. Our approach includes three main parts: (1) a set of general criteria to thoroughly evaluate the reproducibility of DL models for two different domains, (2) a unified framework which leverages a record-and-replay technique to mitigate software-related randomness and a profile-and-patch technique to control hardware-related non-determinism, and (3) a reproducibility guideline which explains the rationales and the mitigation strategies on conducting a reproducible training process for DL models. Case study results show our approach can successfully reproduce six open source and one commercial DL models.",
     "date": "2022-05-21",
     "authors": [
       "Boyuan Chen",
@@ -363,13 +380,13 @@
   },
   {
     "title": "Towards build verifiability for java-based systems",
-    "abstract": "We propose an approach for achieving build verifiability in Java-based software systems. Our method enables verification that compiled artifacts match their source code and build specifications, enhancing security and trust in software supply chains. The approach addresses challenges specific to Java ecosystems including dependency management and build tool integration.",
+    "abstract": "Build verifiability refers to the property that the build of a software system can be verified by independent third parties and it is crucial for the trustworthiness of a software system. Various efforts towards build verifiability have been made to C/C++-based systems, yet the techniques for Java-based systems are not systematic and are often specific to a particular build tool (e.g., Maven). In this study, we present a systematic approach towards build verifiability on Java-based systems. Our approach consists of three parts: a unified build process, a tool that dynamically controls non-determinism during the build process, and another tool that eliminates non-equivalences by post-processing the build artifacts. We apply our approach on 46 unverified open source projects from Reproducible Central and 13 open source projects that are widely used by Huawei commercial products. As a result, 91% of the unverified Reproducible Central projects and 100% of the commercially adopted OSS projects are successfully verified with our approach. In addition, based on our experience in analyzing thousands of builds for both commercial and open source Java-based systems, we present 14 patterns that introduce non-equivalences in generated build artifacts and their respective mitigation strategies. Among these patterns, 11 (78%) are unique for Java-based system, whereas the remaining 3 (22%) are common with C/C++-based systems. The approach and the findings of this paper are useful for both practitioners and researchers who are interested in build verifiability.",
     "date": "2022-05-21",
     "authors": [
-      "Jinfeng Xiong",
+      "Jiawen Xiong",
       "Yong Shi",
       "Boyuan Chen",
-      "Filipe Roseiro Cogo",
+      "Filipe R. Cogo",
       "Zhen Ming Jiang"
     ],
     "type": "Conference",
@@ -377,16 +394,16 @@
   },
   {
     "title": "Systems, methods, and non-transitory computer-readable storage devices for detecting and analyzing data clones in tabular datasets",
-    "abstract": "A computerized method for detecting and analyzing data clones in one or more dataset pairs has the steps of: obtaining one or more similarity matrices and one or more sets of readout values of the one or more similarity matrices from the dataset pairs using a data-clone detection method, each set of readout values corresponding to a similarity matrix; obtaining one or more importance values for the one or more similarity matrices by processing the one or more sets of readout values using an interpretation method.",
-    "date": "2022-05-09",
+    "abstract": "A computerized method for detecting and analyzing data clones in one or more dataset pairs has the steps of: obtaining one or more similarity matrices and one or more sets of readout values of the one or more similarity matrices from the dataset pairs using a data-clone detection method, each set of readout values corresponding to a similarity matrix; obtaining one or more importance values for the one or more similarity matrices by processing the one or more sets of readout values using an interpretation method, each importance value corresponding to a similarity matrix; obtaining one or more weighted similarity matrices by weighting each similarity matrix using the corresponding importance value; and obtaining one or more summed similarity matrices by grouping and summing the weighted similarity matrices according to one or more categories for providing a result with indications of locations of the data clones in the dataset pairs.",
+    "date": "2024-05-09",
     "authors": ["Xu Yang", "Gopi Krishnan Rajbahadur", "Dayi Lin"],
     "type": "Patent",
     "paperLink": "https://patentimages.storage.googleapis.com/22/01/b9/3637dd26320e1f/US20240152578A1.pdf"
   },
   {
     "title": "Systems, methods, and non-transitory computer-readable storage devices for training deep learning and neural network models using overfitting detection and prevention",
-    "abstract": "Systems and methods for training deep learning and neural network models with automated overfitting detection and prevention capabilities. The approach uses training history analysis to identify optimal stopping points and prevent model degradation during the training process.",
-    "date": "2022-05-09",
+    "abstract": "A method for detecting and/or preventing overfitting in training of deep learning and neural network models. The method has a classifier-training method, an overfittingdetection method, and an overfitting-prevention method. The classifier-training method trains one or more classifiers using training histories and labels of one or more trained machine-learning (ML) models. The overfitting-detection method uses the trained classifiers based on the training history such as validation losses of a trained target ML model to identify an overfitting status of the trained target ML model. The overfitting-prevention method is performed during the training of a target ML model and uses the trained classifiers based on the training history of the target ML model to identify and preventing overfitting of the target ML 3, 2022. model.",
+    "date": "2024-05-09",
     "authors": [
       "Hao Li",
       "Gopi Krishnan Rajbahadur",
@@ -398,21 +415,21 @@
   },
   {
     "title": "Towards a consistent interpretation of AIOps models",
-    "abstract": "Artificial Intelligence for IT Operations (AIOps) has been adopted in organizations in various tasks, including interpreting models to identify indicators of service failures. To avoid misleading practitioners, AIOps model interpretations should be consistent (i.e., different AIOps models on the same task agree with one another on feature importance). However, many AIOps studies violate established practices in the machine learning community when deriving interpretations.",
+    "abstract": "Artificial Intelligence for IT Operations (AIOps) has been adopted in organizations in various tasks, including interpreting models to identify indicators of service failures. To avoid misleading practitioners, AIOps model interpretations should be consistent (i.e., different AIOps models on the same task agree with one another on feature importance). However, many AIOps studies violate established practices in the machine learning community when deriving interpretations, such as interpreting models with suboptimal performance, though the impact of such violations on the interpretation consistency has not been studied.",
     "date": "2021-11-15",
     "authors": [
       "Yingzhe Lyu",
       "Gopi Krishnan Rajbahadur",
       "Dayi Lin",
       "Boyuan Chen",
-      "Zhen Ming Jack Jiang"
+      "Zhen Ming Jiang"
     ],
     "type": "Journal",
     "paperLink": "https://dl.acm.org/doi/pdf/10.1145/3488269"
   },
   {
     "title": "Can I use this publicly available dataset to build commercial AI software?--A Case Study on Publicly Available Image Datasets",
-    "abstract": "Publicly available datasets are one of the key drivers for commercial AI software. The use of publicly available datasets is governed by dataset licenses. These dataset licenses outline the rights one is entitled to on a given dataset and the obligations that one must fulfil to enjoy such rights without any license compliance violations. Unlike standardized Open Source Software (OSS) licenses, existing dataset licenses are defined in an ad-hoc manner and do not clearly outline the rights and obligations associated with their usage.",
+    "abstract": "Publicly available datasets are one of the key drivers for commercial AI software. The use of publicly available datasets is governed by dataset licenses. These dataset licenses outline the rights one is entitled to on a given dataset and the obligations that one must fulfil to enjoy such rights without any license compliance violations. Unlike standardized Open Source Software (OSS) licenses, existing dataset licenses are defined in an ad-hoc manner and do not clearly outline the rights and obligations associated with their usage. Further, a public dataset may be hosted in multiple locations and created from multiple data sources each of which may have different licenses. Hence, existing approaches on checking OSS license compliance cannot be used. In this paper, we propose a new approach to assessing the potential license compliance violations if a given publicly available dataset were to be used for building commercial AI software. We conduct a case study with our approach on 6 commonly used publicly available image datasets. Our results show that there exists potential risks of license violations associated with all of the studied datasets if they were used for commercial purposes.",
     "date": "2021-11-03",
     "authors": [
       "Gopi Krishnan Rajbahadur",
@@ -428,12 +445,12 @@
   },
   {
     "title": "An experience report on producing verifiable builds for large-scale commercial systems",
-    "abstract": "We present an experience report on implementing verifiable builds for large-scale commercial software systems. Our report covers the challenges, solutions, and lessons learned from deploying verifiable build processes in industrial settings. The findings provide practical insights for organizations seeking to enhance their software supply chain security through build verification.",
-    "date": "2021-06-15",
+    "abstract": "Build verifiability is a safety property for a software system which can be used to check against various security-related issues during the build process. In summary, a verifiable build generates equivalent build artifacts for every build instance, allowing independent auditors to verify that the generated artifacts correspond to their source code. Producing a verifiable build is a very challenging problem, as non-equivalences in the build artifacts can be caused by non-determinsm from the build environment, the build toolchain, or the system implementation. Existing research and practices on build verifiability mainly focus on remediating sources of non-determinism. However, such a process does not work well with large-scale commercial systems (LSCSs) due to their stringent security requirements, complex third party dependencies, and large volumes of code changes. In this paper, we present an experience report on using a unified process and a toolkit to produce verifiable builds for LSCSs. A unified process contrasts with the existing practices in which recommendations to mitigate sources of non-determinism are proposed on a case-by-case basis and are not codified in a comprehensive tool. Our approach supports the following three strategies to systematically mitigate non-equivalences in the build artifacts: remediation, controlling, and interpretation. Case study on three LSCSs within Huawei shows that our approach is able to increase the proportion of verified build artifacts from less than 50 to 100 percent. To cross-validate our approach, we successfully applied our approach to build 2,218 open source packages distributed under CentOS 7.8, increasing the proportion of verified build artifacts from 85 to 99 percent with minimal human intervention. We also provide an overview of our mitigation guideline, which describes the recommended strategies to mitigate various non-equivalences. Finally, we present some discussions and open research problems in this area based on our experience and lessons learned in the past few years of applying our approach within the company. This paper will be useful for practitioners and software engineering researchers who are interested in build verifiability.",
+    "date": "2021-06-25",
     "authors": [
       "Yong Shi",
       "Mingzhi Wen",
-      "Filipe Roseiro Cogo",
+      "Filipe R. Cogo",
       "Boyuan Chen",
       "Zhen Ming Jiang"
     ],
@@ -442,7 +459,7 @@
   },
   {
     "title": "The Impact of Data Merging on the Interpretation of Cross-Project Just-In-Time Defect Models",
-    "abstract": "Just-In-Time (JIT) defect models are classification models that identify the code commits that are likely to introduce defects. Cross-project JIT models have been introduced to address the suboptimal performance of JIT models when historical data is limited. However, many studies built cross-project JIT models using a pool of mixed data from multiple projects (i.e., data merging)—assuming that the properties of defect-introducing commits of a project are similar to that of the other projects, which is likely not true.",
+    "abstract": "Just-In-Time (JIT) defect models are classification models that identify the code commits that are likely to introduce defects. Cross-project JIT models have been introduced to address the suboptimal performance of JIT models when historical data is limited. However, many studies built cross-project JIT models using a pool of mixed data from multiple projects (i.e., data merging)—assuming that the properties of defect-introducing commits of a project are similar to that of the other projects, which is likely not true. In this paper, we set out to investigate the interpretation of JIT defect models that are built from individual project data and a pool of mixed project data with and without consideration of project-level variances. Through a case study of 20 datasets of open source projects, we found that (1) the interpretation of JIT models that are built from individual projects varies among projects; and (2) the project-level variances cannot be captured by a JIT model that is trained from a pool of mixed data from multiple projects without considering project-level variances (i.e., a global JIT model). On the other hand, a mixed-effect JIT model that considers project-level variances represents the different interpretations better, without sacrificing performance, especially when the contexts of projects are considered. The results hold for different mixed-effect learning algorithms. When the goal is to derive sound interpretation of cross-project JIT models, we suggest that practitioners and researchers should opt to use a mixed-effect modelling approach that considers individual projects and contexts.",
     "date": "2021-04-19",
     "authors": [
       "Dayi Lin",
@@ -454,7 +471,7 @@
   },
   {
     "title": "A survey of software log instrumentation",
-    "abstract": "We present a comprehensive survey of software log instrumentation practices, techniques, and tools. Our survey covers the evolution of logging frameworks, best practices for log instrumentation, and emerging trends in log analysis and management. The work provides guidance for developers and researchers on effective logging strategies for modern software systems.",
+    "abstract": "Log messages have been used widely in many software systems for a variety of purposes during software development and field operation. There are two phases in software logging: log instrumentation and log management. Log instrumentation refers to the practice that developers insert logging code into source code to record runtime information. Log management refers to the practice that operators collect the generated log messages and conduct data analysis techniques to provide valuable insights of runtime behavior. There are many open source and commercial log management tools available. However, their effectiveness highly depends on the quality of the instrumented logging code, as log messages generated by high-quality logging code can greatly ease the process of various log analysis tasks (e.g., monitoring, failure diagnosis, and auditing). Hence, in this article, we conducted a systematic survey on state-of-the-art research on log instrumentation by studying 69 papers between 1997 and 2019. In particular, we have focused on the challenges and proposed solutions used in the three steps of log instrumentation: (1) logging approach; (2) logging utility integration; and (3) logging code composition. This survey will be useful to DevOps practitioners and researchers who are interested in software logging.",
     "date": "2021-05-03",
     "authors": ["Boyuan Chen", "Zhen Ming Jiang"],
     "type": "Journal",
