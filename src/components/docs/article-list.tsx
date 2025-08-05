@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import {
   Pagination,
@@ -10,6 +10,7 @@ import {
   PaginationPrevious,
 } from '@/components/common/ui/pagination';
 import { Blog, Publication } from '@/config/home';
+import { useUIStore } from '@/stores/ui';
 import { BlogCard } from '../home/blog-card';
 import { ResearchCard } from '../home/research-card';
 
@@ -36,7 +37,7 @@ function ListPagination({
     numPages &&
     numPages > 1 && (
       <Pagination>
-        <PaginationContent className="my-8 flex w-lg items-center justify-between">
+        <PaginationContent className="my-8 flex w-4xl items-center justify-between">
           <PaginationItem>
             <PaginationPrevious
               onClick={() => goPage(Math.max(currentPage - 1, 1))}
@@ -126,6 +127,9 @@ function ListPagination({
           {/*     return pages; */}
           {/*   })()} */}
           {/* </div> */}
+          <span className="text-sm text-muted-foreground">
+            {currentPage} / {numPages}
+          </span>
 
           <PaginationItem>
             <PaginationNext
@@ -141,19 +145,25 @@ function ListPagination({
 
 // TODO: in future for performance purpose, we might need to get the publications page by page isntead of all at once
 export function ResearchList({ content, itemsPerPage = 5 }: ResearchListProps) {
-  const [page, setPage] = useState(1);
+  // const researchPage = useUIStore((state) => state.researchPage);
+  // const setResearchPage = useUIStore((state) => state.setResearchPage);
+  const page = useUIStore((state) => state.page);
+  const setPage = useUIStore((state) => state.setPage);
   const pageCount = useMemo(
     () => Math.ceil(content.length / itemsPerPage),
     [content.length, itemsPerPage],
   );
-  const pagedItems = useMemo(
-    () => content.slice((page - 1) * itemsPerPage, page * itemsPerPage),
-    [content, page, itemsPerPage],
-  );
+  const researchPage = page['research'] || 1;
+  const pagedItems = useMemo(() => {
+    return content.slice(
+      (researchPage - 1) * itemsPerPage,
+      researchPage * itemsPerPage,
+    );
+  }, [content, itemsPerPage, researchPage]);
   const gotoPage = (newPage: number) => {
     if (newPage < 1) newPage = 1;
     if (newPage > pageCount) newPage = pageCount;
-    setPage(newPage);
+    setPage('research', newPage);
   };
 
   return (
@@ -164,7 +174,7 @@ export function ResearchList({ content, itemsPerPage = 5 }: ResearchListProps) {
         ))}
       </div>
       <ListPagination
-        currentPage={page}
+        currentPage={researchPage}
         goPage={gotoPage}
         numPages={pageCount}
       />
@@ -173,19 +183,21 @@ export function ResearchList({ content, itemsPerPage = 5 }: ResearchListProps) {
 }
 
 export function BlogsList({ content, itemsPerPage = 5 }: BlogsListProps) {
-  const [page, setPage] = useState(1);
+  const page = useUIStore((state) => state.page);
+  const setPage = useUIStore((state) => state.setPage);
+  const blogPage = page['blog'] || 1;
   const pageCount = useMemo(
     () => Math.ceil(content.length / itemsPerPage),
     [content.length, itemsPerPage],
   );
   const pagedItems = useMemo(
-    () => content.slice((page - 1) * itemsPerPage, page * itemsPerPage),
-    [content, page, itemsPerPage],
+    () => content.slice((blogPage - 1) * itemsPerPage, blogPage * itemsPerPage),
+    [content, blogPage, itemsPerPage],
   );
   const gotoPage = (newPage: number) => {
     if (newPage < 1) newPage = 1;
     if (newPage > pageCount) newPage = pageCount;
-    setPage(newPage);
+    setPage('blog', newPage);
   };
 
   return (
@@ -196,7 +208,7 @@ export function BlogsList({ content, itemsPerPage = 5 }: BlogsListProps) {
         ))}
       </div>
       <ListPagination
-        currentPage={page}
+        currentPage={blogPage}
         goPage={gotoPage}
         numPages={pageCount}
       />

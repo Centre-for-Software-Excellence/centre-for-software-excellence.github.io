@@ -13,6 +13,9 @@ export function CollaboratorCard({
           className="max-h-full max-w-full object-contain grayscale filter transition-all duration-300 group-hover:grayscale-0"
           src={collaborator.logo}
           alt={`${collaborator.org} logo`}
+          style={{
+            mixBlendMode: 'multiply',
+          }}
         />
       </div>
 

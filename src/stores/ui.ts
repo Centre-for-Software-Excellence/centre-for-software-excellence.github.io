@@ -19,6 +19,8 @@ export type UIState = {
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
   setMenuOpen: (open: boolean) => void;
+  page: Record<string, number>;
+  setPage: (pageName: string, pageNumber: number) => void;
 };
 
 export const useUIStore = create<UIState>(
@@ -31,6 +33,15 @@ export const useUIStore = create<UIState>(
       doc: null,
       error: null,
       menuOpen: false,
+      page: {},
+      setPage: (pageName: string, pageNumber: number) => {
+        set((state) => ({
+          page: {
+            ...state.page,
+            [pageName]: pageNumber,
+          },
+        }));
+      },
       setShowSidebar: (show: boolean) => {
         set({ showSidebar: show });
       },

@@ -104,31 +104,45 @@ export function calculateGridConfig(
   };
 }
 
-export const GRADIENT_CONFIGS = {
-  foregroundStops: [
-    { offset: '0%', color: 'transparent' },
-    { offset: '20%', color: 'var(--gradient-start)', opacity: 0.1 },
-    { offset: '50%', color: 'var(--gradient-start)', opacity: 0.2 },
-    { offset: '80%', color: 'var(--gradient-start)', opacity: 0.1 },
-    { offset: '100%', color: 'transparent' },
-  ],
-  initStops: [
-    { offset: '0%', color: 'transparent' },
-    { offset: '20%', color: 'var(--gradient-start)', opacity: 0.5 },
-    { offset: '50%', color: 'var(--gradient-start)', opacity: 1 },
-    { offset: '80%', color: 'var(--gradient-start)', opacity: 0.5 },
-    { offset: '100%', color: 'transparent' },
-  ],
-  yDirection: {
-    x1: '0%' as const,
-    y1: '0%' as const,
-    x2: '0%' as const,
-    y2: 400,
-  },
-  xDirection: {
-    x1: '0%' as const,
-    y1: '0%' as const,
-    x2: 400,
-    y2: '0%' as const,
-  },
+export const GRADIENT_CONFIGS = (dark: boolean) => {
+  return {
+    foregroundStops: [
+      { offset: '0%', color: 'transparent' },
+      {
+        offset: '20%',
+        color: 'var(--gradient-start)',
+        opacity: dark ? 0.3 : 0.1,
+      },
+      {
+        offset: '50%',
+        color: 'var(--gradient-start)',
+        opacity: dark ? 0.5 : 0.2,
+      },
+      {
+        offset: '80%',
+        color: 'var(--gradient-start)',
+        opacity: dark ? 0.3 : 0.1,
+      },
+      { offset: '100%', color: 'transparent' },
+    ],
+    initStops: [
+      { offset: '0%', color: 'transparent' },
+      { offset: '20%', color: 'var(--gradient-start)', opacity: 0.5 },
+      { offset: '50%', color: 'var(--gradient-start)', opacity: 1 },
+      { offset: '80%', color: 'var(--gradient-start)', opacity: 0.5 },
+      { offset: '100%', color: 'transparent' },
+    ],
+    yDirection: {
+      x1: '0%' as const,
+      y1: '0%' as const,
+      x2: '0%' as const,
+      y2: 400,
+    },
+    xDirection: {
+      x1: '0%' as const,
+      y1: '0%' as const,
+      x2: 400,
+      y2: '0%' as const,
+    },
+  };
 };

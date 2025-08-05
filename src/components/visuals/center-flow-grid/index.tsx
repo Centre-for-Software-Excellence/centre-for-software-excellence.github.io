@@ -1,5 +1,6 @@
 import React, { forwardRef, useEffect, useMemo } from 'react';
 
+import { useTheme } from '@/components/common/theme-provider';
 import { cn } from '@/lib/utils';
 import { CenterCircle, Grid, GridPath, SVGDefs } from './components';
 import {
@@ -28,6 +29,7 @@ export const CenterFlowGrid = forwardRef<
   { className?: string }
 >(({ className }, ref) => {
   const [scrollY, setScrollY] = React.useState(0);
+  const theme = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +45,9 @@ export const CenterFlowGrid = forwardRef<
   const scrollProgress =
     scrollY / (document.documentElement.scrollHeight - window.innerHeight);
 
-  const { foregroundStops, initStops, xDirection } = GRADIENT_CONFIGS;
+  const { foregroundStops, initStops, xDirection } = GRADIENT_CONFIGS(
+    theme.theme === 'dark',
+  );
 
   const inPaths = useMemo(
     () => [
@@ -106,6 +110,7 @@ export const CenterFlowGrid = forwardRef<
           origin={gridConfig.origin}
           dimensions={gridConfig.dimensions}
           centerPoint={gridConfig.centerPoint}
+          opacity={scrollY < 300 ? 0.3 : 0}
         />
 
         {/*Animated in paths:*/}
@@ -167,7 +172,7 @@ export const CenterFlowGrid = forwardRef<
         className="bg-radial-center-out pointer-events-none absolute"
         style={{
           left: '50%',
-          top: '48px',
+          top: '0',
           width: `${gridConfig.gridPixelWidth + GRID_SIZE * 2}px`,
           height: `${gridConfig.gridPixelHeight + GRID_SIZE * 2}px`,
           transform: `translate(-50%, -50%) translate(${gridConfig.origin.x + gridConfig.gridPixelWidth / 2 - SVG_WIDTH / 2}px, ${gridConfig.origin.y + gridConfig.gridPixelHeight / 2}px)`,

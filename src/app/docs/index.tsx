@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { Loading } from '@/components/common/ui/loading';
@@ -85,10 +85,12 @@ export default function DocsPage() {
         )}
         {!loading && !error && doc && doc.type === 'tsx' && doc.module && (
           <div className="mx-auto max-w-[calc(65chl] bg-background p-4 md:max-w-[calc(65ch+14rem)] md:shrink-1 lg:max-w-[calc(85ch)] prose-headings:mt-4">
-            {(() => {
-              const Component = doc.module.default || doc.module;
-              return <Component {...props} />;
-            })()}
+            <Suspense fallback={<Loading />}>
+              {(() => {
+                const Component = doc.module.default || doc.module;
+                return <Component {...props} />;
+              })()}
+            </Suspense>
           </div>
         )}
       </main>

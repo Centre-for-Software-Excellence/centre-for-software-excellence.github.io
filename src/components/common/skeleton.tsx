@@ -86,7 +86,7 @@ export function ResearchSkeleton() {
 
 export function ArticleIndexSkeleton() {
   return (
-    <div className="mx-auto px-4 py-8">
+    <div className="mx-auto">
       <div className="space-y-6">
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="rounded-lg border bg-card p-6 shadow-sm">
@@ -103,4 +103,3 @@ export function ArticleIndexSkeleton() {
     </div>
   );
 }
-

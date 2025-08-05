@@ -1,35 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 
 import { Badge } from '@/components/common/badge';
 import { Button } from '@/components/common/ui/button';
-import { Publication } from '@/config/home';
 import { usePublications } from '@/hooks/use-publications';
 import { useUIStore } from '@/stores/ui';
 
 export default function PublicationIndex({ title }: { title: string }) {
-  const [publication, setPublication] = useState<Publication | null>(null);
   const publications = usePublications();
-  const setLoading = useUIStore((state) => state.setLoading);
-
-  useEffect(() => {
+  const setError = useUIStore((state) => state.setError);
+  const publication = useMemo(() => {
     try {
       const decodedTitle = decodeURIComponent(title);
-      if (!decodedTitle || !decodedTitle.trim()) {
-        setLoading(false);
-        return;
-      }
-      const foundPublication = publications.find(
-        (pub) => pub.title === decodedTitle,
-      );
-      setPublication(foundPublication || null);
+      return publications.find((pub) => pub.title === decodedTitle) || null;
     } catch (error) {
-      console.error('Error decoding title:', error);
-      setPublication(null);
+      setError(`Failed to find the publication, error ${error}`);
+      return null;
     }
-    setLoading(false);
-  }, [title, publications, setLoading]);
+  }, [title, publications, setError]);
 
   if (!publication) {
     return (
