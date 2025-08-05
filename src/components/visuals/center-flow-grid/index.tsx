@@ -43,8 +43,7 @@ export const CenterFlowGrid = forwardRef<
   const scrollProgress =
     scrollY / (document.documentElement.scrollHeight - window.innerHeight);
 
-  const { foregroundStops, initStops, yDirection, xDirection } =
-    GRADIENT_CONFIGS;
+  const { foregroundStops, initStops, xDirection } = GRADIENT_CONFIGS;
 
   const inPaths = useMemo(
     () => [
@@ -83,25 +82,6 @@ export const CenterFlowGrid = forwardRef<
         viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
       >
         <SVGDefs />
-
-        <GridPath
-          strokeWidth={1}
-          gridOrigin={gridConfig.origin}
-          pathId="initial-down"
-          coordinates={[
-            { x: CENTER_POINT.x, y: CENTER_POINT.y + 1 },
-            { x: CENTER_POINT.x, y: GRID_DIMENSIONS.height - 1 },
-          ]}
-          gradientConfig={{
-            stops: initStops,
-            direction: yDirection,
-            animation: {
-              values: `${CENTER_POINT.x * 50} ${CENTER_POINT.y * 50 + 100}; ${CENTER_POINT.x * 50} ${(GRID_DIMENSIONS.height - 1) * 50 + 100}`,
-              duration: '1s',
-              repeatCount: '1',
-            },
-          }}
-        />
 
         <GridPath
           strokeWidth={1}
@@ -174,11 +154,13 @@ export const CenterFlowGrid = forwardRef<
           />
         ))}
 
-        <CenterCircle
-          centerPoint={CENTER_POINT}
-          gridOrigin={gridConfig.origin}
-          gridSize={GRID_SIZE}
-        />
+        {scrollY < 300 && (
+          <CenterCircle
+            centerPoint={CENTER_POINT}
+            gridOrigin={gridConfig.origin}
+            gridSize={GRID_SIZE}
+          />
+        )}
       </svg>
       {/* a mask that add gradient to the grid so taht the border would be hidden*/}
       <span
