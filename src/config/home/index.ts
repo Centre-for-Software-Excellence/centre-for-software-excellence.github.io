@@ -12,8 +12,7 @@ export interface Publication {
   abstract: string;
   date: string;
   authors: string[];
-  type: string;
-  link: string;
+  categories: string[];
   paperLink?: string;
 }
 

@@ -6,7 +6,7 @@ type Publication = {
   abstract: string;
   date: string;
   authors: string[];
-  type: string;
+  categories: string[];
   paperLink: string;
 };
 
@@ -18,6 +18,7 @@ function isValidDateFormat(dateStr: string): boolean {
   return !isNaN(date.getTime()) && dateStr === date.toISOString().slice(0, 10);
 }
 
+// need zod or not? just for this simple validation?
 function isValidPublication(obj: any): obj is Publication {
   return (
     typeof obj === 'object' &&
@@ -27,7 +28,8 @@ function isValidPublication(obj: any): obj is Publication {
     isValidDateFormat(obj.date) &&
     Array.isArray(obj.authors) &&
     obj.authors.every((a: any) => typeof a === 'string') &&
-    typeof obj.type === 'string' &&
+    Array.isArray(obj.categories) &&
+    obj.categories.every((c: any) => typeof c === 'string') &&
     typeof obj.paperLink === 'string'
   );
 }

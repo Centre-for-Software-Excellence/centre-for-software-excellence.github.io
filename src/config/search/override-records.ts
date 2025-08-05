@@ -10,7 +10,7 @@ export const researchRecords = () => {
       section: 'Research / ' + pub.title,
       description: pub.abstract,
       slug: `/docs/research/publication-index/title=${encodeURIComponent(pub.title)}`,
-      tags: pub.type ? [pub.type] : [],
+      tags: pub.categories ? [...pub.categories] : [],
     };
   });
   return records;

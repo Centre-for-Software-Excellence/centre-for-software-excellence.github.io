@@ -1,6 +1,7 @@
 import { ExternalLink } from 'lucide-react';
 import { Link } from 'react-router';
 
+import { Publication } from '@/config/home';
 import { cn, formatDate } from '@/lib/utils';
 import { Badge } from '../common/badge';
 import { Card, CardContent } from '../common/ui/card';
@@ -10,13 +11,7 @@ export function ResearchCard({
   className,
   isArticle = false,
 }: {
-  pub: {
-    title: string;
-    abstract: string;
-    date: string;
-    authors: string[];
-    type: string;
-  };
+  pub: Publication;
   className?: string;
   isArticle?: boolean;
 }) {
@@ -37,17 +32,10 @@ export function ResearchCard({
                 <Badge
                   className={cn(
                     'border-border group-hover:border-foreground dark:group-hover:border-active/50 dark:group-hover:bg-active/10 dark:group-hover:text-active',
-                    {
-                      'bg-muted text-muted-foreground': pub.type === 'Preprint',
-                      'bg-primary text-primary-foreground':
-                        pub.type === 'Journal',
-                      'bg-secondary text-secondary-foreground':
-                        pub.type === 'Conference',
-                      'bg-accent text-accent-foreground': pub.type === 'Other',
-                    },
+                    'bg-primary text-primary-foreground',
                   )}
                 >
-                  {pub.type}
+                  {pub.categories[0]}
                 </Badge>
                 <span className="text-sm text-muted-foreground">
                   {formatDate(pub.date)}

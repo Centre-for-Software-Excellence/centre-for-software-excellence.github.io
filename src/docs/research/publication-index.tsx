@@ -43,12 +43,16 @@ export default function PublicationIndex({ title }: { title: string }) {
     <div className="mx-auto w-full md:p-6">
       <div className="md:p-8">
         <div className="mb-6">
-          <div className="mb-4 flex items-center gap-3">
-            <Badge
-              variant={publication.type === 'Journal' ? 'default' : 'secondary'}
-            >
-              {publication.type}
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <Badge key={'pub-0'} variant={'default'}>
+              {publication.categories[0]}
             </Badge>
+            {publication.categories.length > 1 &&
+              publication.categories.slice(1).map((cat, index) => (
+                <Badge key={`pub-${index + 1}`} variant={'outline'}>
+                  {cat}
+                </Badge>
+              ))}
           </div>
           <h1 className="mb-4 text-3xl font-bold text-foreground">
             {publication.title}
