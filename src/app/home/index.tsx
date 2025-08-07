@@ -294,6 +294,7 @@ export default function Page() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (window.innerWidth < 768) return;
 
     // Create ScrollSmoother with more subtle smoothing
     const smoother = ScrollSmoother.create({

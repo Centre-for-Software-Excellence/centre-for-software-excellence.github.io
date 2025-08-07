@@ -89,7 +89,7 @@ export function calculateGridConfig(
 
   const gridOrigin = {
     x: (svgWidth - gridPixelWidth) / 2, // Keep horizontal centering
-    y: 48, // Position 48px from top (topbar height)
+    y: 0,
   };
 
   return {

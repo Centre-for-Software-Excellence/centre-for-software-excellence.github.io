@@ -112,7 +112,7 @@ export function Grid({
   for (let i = 0; i < width; i++) {
     const x = originX + i * gridSize;
     const y1 = originY - gridSize;
-    const y2 = maxY + gridSize;
+    const y2 = maxY;
 
     verticalLines.push(<line key={`v-${i}`} x1={x} y1={y1} x2={x} y2={y2} />);
   }
@@ -182,4 +182,3 @@ export function SVGDefs() {
     </defs>
   );
 }
-

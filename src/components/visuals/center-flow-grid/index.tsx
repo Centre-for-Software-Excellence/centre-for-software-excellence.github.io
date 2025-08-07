@@ -80,7 +80,7 @@ export const CenterFlowGrid = forwardRef<
     <div className={cn('h-screen w-screen', className)} ref={ref}>
       <svg
         className={cn(
-          'absolute top-0 h-[800px] w-[200vw] -translate-x-1/2 md:w-full',
+          `absolute h-[600px] -translate-x-1/2 sm:h-[800px] md:top-12`,
           'left-1/2',
         )}
         viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
@@ -182,7 +182,7 @@ export const CenterFlowGrid = forwardRef<
       <span
         className={cn(
           'absolute left-[calc(50%+200px)] -translate-y-[86px] text-5xl font-bold text-gradient-start xs:text-7xl md:left-1/2',
-          '-top-24 md:top-12',
+          '-top-4 xs:-top-12 sm:-top-18 md:top-24',
         )}
         style={{
           transform: `translate(-50%, 50%) translate(${gridConfig.origin.x + CENTER_POINT.x * GRID_SIZE - SVG_WIDTH / 2}px, ${gridConfig.origin.y + CENTER_POINT.y * GRID_SIZE}px)`,
