@@ -1,0 +1,9 @@
+[
+  {
+    "title": "SWE-Effi: Re-Evaluating SWE Agent Solutions for their Efficiency",
+    "abstract": "Existing AI for software engineering leaderboards (e.g., SWE-bench ) focus solely on \"resolve rate\", ignoring the crucial factor of effectiveness in a resource-constrained world. This is a universal problem that also exists beyond software engineering: any AI system should be more than correct—it must also be cost-effective. We introduce SWE-Effi, a set of new metrics to re-evaluate AI systems in terms of holistic effectiveness scores. We define effectiveness as the balance between the resolve rate (the outcome) and the resources consumed (e.g., token and time). In this blog, we specifically focus on the software engineering scenario by re-ranking popular AI systems for issue resolution on a subset of the SWE-bench  benchmark using these new, multi-dimensional metrics. Note that by “AI system”, we refer to a single software system that includes an AI model (LLM) with a software scaffold (e.g., agent) working together to solve a given task.",
+    "date": "2025-07-18",
+    "category": "AI/ML",
+    "link": "https://centre-for-software-excellence.github.io/SWE-Effi/about/introducing-SWE-effi"
+  }
+]

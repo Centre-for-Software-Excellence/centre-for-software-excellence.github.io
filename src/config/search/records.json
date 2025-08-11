@@ -1,0 +1,11 @@
+[
+  {
+    "id": "write-tsx-articles",
+    "section": "Guide / Write TSX Articles",
+    "title": "Write TSX Articles",
+    "headings": ["TSX Component Example", "Interactive Features"],
+    "description": "This is an example of a TSX documentation page with interactive features.",
+    "slug": "/docs/guide/_write-TSX-articles",
+    "tags": ["guide", "tsx", "documentation"]
+  }
+]
