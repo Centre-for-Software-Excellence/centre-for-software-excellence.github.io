@@ -7,7 +7,7 @@ import { useUIStore } from './ui';
 interface Frontmatter {
   title?: string;
   description?: string;
-  author?: string[];
+  author?: Array<string | { name: string; url?: string }>;
   date?: string;
   tags?: string[];
   draft?: boolean;

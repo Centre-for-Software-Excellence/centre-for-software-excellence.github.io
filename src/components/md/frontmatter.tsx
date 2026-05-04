@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useContentStore } from '@/stores/content';
 import { useUIStore } from '@/stores/ui';
-import { H1, H4, Lead, Muted } from '.';
+import { A, H1, H4, Lead, Muted } from '.';
 import { Divider } from '../common/ui/divider';
 
 export function Frontmatter({ className }: { className?: string }) {
@@ -15,8 +15,30 @@ export function Frontmatter({ className }: { className?: string }) {
         </H1>
         {frontmatter?.description && <Lead>{frontmatter?.description}</Lead>}
         <div className="flex w-full flex-col items-start">
-          <div className="flex flex-row gap-2 text-sm text-muted-foreground">
-            {(frontmatter?.author && frontmatter.author.join(', ')) || ' '}
+          <div className="flex flex-row flex-wrap gap-x-1 text-sm text-muted-foreground">
+            {frontmatter?.author?.length
+              ? frontmatter.author.map((a, i) => {
+                  const item = typeof a === 'string' ? { name: a } : a;
+                  const isLast = i === frontmatter.author!.length - 1;
+                  return (
+                    <span key={i}>
+                      {item.url ? (
+                        <A
+                          href={item.url}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className='text-muted-foreground'
+                        >
+                          {item.name}
+                        </A>
+                      ) : (
+                        item.name
+                      )}
+                      {!isLast && ','}
+                    </span>
+                  );
+                })
+              : ' '}
           </div>
           <Muted className="w-full text-end">{frontmatter?.date}</Muted>
         </div>
