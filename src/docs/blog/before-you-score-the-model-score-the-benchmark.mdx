@@ -1,6 +1,5 @@
 ---
-title: 'Before You Score the Model, Score the Benchmark'
-description: 'A Skeptical View Into Current Agentic Software Engineering Benchmarks'
+title: 'Before You Score the Model, Score the Benchmark: A Skeptical View Into Current Agentic Software Engineering Benchmarks'
 excerpt: >-
   The software engineering (SE) community has been captivated by the rise of
   agentic SWEs. As these AI agents evolve, we are naturally shifting our focus
@@ -21,10 +20,23 @@ excerpt: >-
   noise and fundamental flaws.
 date: 2026-05-04
 category: 'AI/ML'
-author: ['Radin Shayanfar', 'Keheliya Gallaba']
+author:
+  - name: Radin Shayanfar
+    url: https://github.com/radinshayanfar
+  - name: Keheliya Gallaba
+    url: https://keheliya.github.io/
 ---
 
 import { Small } from '@/components/md';
+
+# TL;DR
+Agentic coding benchmarks are how the field measures whether AI agents can actually build software. Many of the standard ones have serious problems — most importantly, that the human-authored gold patch doesn't reliably resolve tasks, leaving every model score on top of it built on shifting ground.
+
+- **Started with SWE-bench**, the de facto standard that mostly contains bug-fixing tasks, and found a moving Oracle ceiling, a saturated leaderboard, and a task format that doesn't match how developers actually use coding agents.
+- **Surveyed feature implementation (FI) benchmarks** as a successor and found several from different groups (with confusingly similar names: FeatureBench, FEA-Bench, FeatBench), each with their own pros and cons. We went ahead with **FeatBench**.
+- **FeatBench had a stability problem of its own**: Oracle resolution started at just **37.31%**, far below the ~100% you'd expect from ground truth. We worked through the harness bugs, fixed environment issues, curated a stable subset, and built an adapter for **Harbor** — a standardized platform for running agents against benchmarks. End state: **99.81%** Oracle resolution, with 99%+ of the original instances and tests preserved.
+- **Released everything**: FeatBench-Verified v1.3, a Harbor adapter for FeatBench, our patched upstream harness, and PRs back to the original FeatBench repo.
+- **Looking ahead**: if benchmark creators do one thing differently, it should be validating every benchmark with an Oracle (gold patch) and a no-op (no operation) agent first — confirming the ceiling lands near 100% and the floor is 0% before scoring any real model. And more broadly, infrastructure noise needs to be treated as a first-class problem, not something downstream evaluators are left to work around.
 
 # Introduction
 
