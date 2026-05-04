@@ -57,17 +57,22 @@ export const TopBar = () => {
             </div>
           </Link>
         </div>
-        {/* Mobile Menu Toggle */}
-        {/* NOTE: here we use showSiebar becase we only need to show search on certain ropute, e.g. blog/research */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle Menu"
-        >
-          {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
+        {/* Mobile Menu Toggle — hide when there are no enabled topbar links */}
+        {topbarLinks.length > 0 && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle Menu"
+          >
+            {menuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </Button>
+        )}
         <div className="hidden items-center space-x-1 md:flex md:space-x-4">
           {topbarLinks?.map((link, idx) => (
             <div
