@@ -61,7 +61,7 @@ function generateBlogs(): void {
 
         const blog: Blog = {
           title: frontmatter.title || generateTitleFromFilename(filename),
-          abstract: frontmatter.description || frontmatter.excerpt || '',
+          abstract: frontmatter.excerpt || frontmatter.description || '',
           date: frontmatter.date
             ? frontmatter.date instanceof Date
               ? frontmatter.date.toISOString().split('T')[0]

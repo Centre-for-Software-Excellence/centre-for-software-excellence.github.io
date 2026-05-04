@@ -1,5 +1,12 @@
 [
   {
+    "title": "Before You Score the Model, Score the Benchmark",
+    "abstract": "The software engineering (SE) community has been captivated by the rise of agentic SWEs. As these AI agents evolve, we are naturally shifting our focus from simple bug fixes to the significantly more complex task of full-blown feature implementation. However, evaluating these agents introduces a profound challenge that did not exist in earlier AI domains, such as image classification. While in those fields, the \"gold\" ground-truth patch would guarantee a 100% resolution rate, achieving this ceiling in software engineering benchmarks is neither easy nor straightforward, even when using an Oracle (the gold patch itself). The sheer friction of environment building, combined with the instability of test execution, creates a significant infrastructural noise problem. If we can't reliably spin up environments and run tests—if the perfect solution can't consistently achieve 100% success—we can't trust the benchmarks or meaningfully evaluate the agents. As part of an internal project diving into SE agent benchmarks, we decided to lift the hood on current standard datasets to investigate this discrepancy. What we found was a concerning amount of infrastructure noise and fundamental flaws.",
+    "date": "2026-05-04",
+    "category": "AI/ML",
+    "link": "/docs/blog/before-you-score-the-model-score-the-benchmark"
+  },
+  {
     "title": "RepoForge: Training a SOTA Fast-thinking SWE Agent with an End-to-End Data Curation Pipeline Synergizing SFT and RL at Scale",
     "abstract": "The Problem: Training software engineering (SWE) LLMs is bottlenecked by expensive infrastructure, inefficient evaluation pipelines, scarce training data, and costly quality control. Our Solution: RepoForge: an autonomous, end-to-end pipeline that generates, evaluates, and trains SWE agents at scale. We present:...",
     "date": "2025-07-17",
