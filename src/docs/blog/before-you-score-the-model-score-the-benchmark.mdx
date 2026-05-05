@@ -28,15 +28,17 @@ author:
 ---
 
 import { Small } from '@/components/md';
+import { Divider } from '@/components/common/ui/divider';
+
+<div className="my-12 mx-2 rounded-lg border border-border bg-muted/40 px-6 py-2 shadow-[0_0_36px_-4px_oklch(from_var(--color-muted-foreground)_l_c_h_/_0.05)] dark:shadow-[0_0_36px_-4px_oklch(from_var(--color-active)_l_c_h_/_0.35)] [&>:first-child]:mt-2 [&>:last-child]:mb-2">
 
 # TL;DR
-Agentic coding benchmarks are how the field measures whether AI agents can actually build software. Many of the standard ones have serious problems — most importantly, that the human-authored gold patch doesn't reliably resolve tasks, leaving every model score on top of it built on shifting ground.
 
-- **Started with SWE-bench**, the de facto standard that mostly contains bug-fixing tasks, and found a moving Oracle ceiling, a saturated leaderboard, and a task format that doesn't match how developers actually use coding agents.
-- **Surveyed feature implementation (FI) benchmarks** as a successor and found several from different groups (with confusingly similar names: FeatureBench, FEA-Bench, FeatBench), each with their own pros and cons. We went ahead with **FeatBench**.
-- **FeatBench had a stability problem of its own**: Oracle resolution started at just **37.31%**, far below the ~100% you'd expect from ground truth. We worked through the harness bugs, fixed environment issues, curated a stable subset, and built an adapter for **Harbor** — a standardized platform for running agents against benchmarks. End state: **99.81%** Oracle resolution, with 99%+ of the original instances and tests preserved.
-- **Released everything**: FeatBench-Verified v1.3, a Harbor adapter for FeatBench, our patched upstream harness, and PRs back to the original FeatBench repo.
-- **Looking ahead**: if benchmark creators do one thing differently, it should be validating every benchmark with an Oracle (gold patch) and a no-op (no operation) agent first — confirming the ceiling lands near 100% and the floor is 0% before scoring any real model. And more broadly, infrastructure noise needs to be treated as a first-class problem, not something downstream evaluators are left to work around.
+- We surveyed several SWE benchmarks across bug-fixing and feature-implementation domains, and each had its own pros and cons — but the most pervasive issue was that the human-authored gold patch doesn't reliably resolve tasks, leaving every model score on top of it built on shifting ground.
+- We substantially increased the stability of FeatBench, diagnosed its harness and environment problems, and lifted gold patch resolution from **37.31%** ± 1.88 to **99.81%** ± 0.10 while preserving 99%+ of the original instances and tests. 
+- We contributed back to the community by porting our fixes upstream to FeatBench, building a Harbor adapter, and releasing FeatBench-Verified v1.3.
+
+</div>
 
 # Introduction
 
@@ -254,7 +256,7 @@ The table below clearly outlines our journey from the broken original environmen
 | **v1.1-Verified** _(112 tasks)_      | Partially Patched Harness (v1.1)    |    8     |       98.66%        |    1.17%    |     0.41%     |
 | **v1.2-Verified** _(131 tasks)_      | Partially Patched Harness (v1.1)    |    4     |       84.54%        |    8.30%    |     4.15%     |
 | **Original FeatBench** _(156 tasks)_ | Harbor Framework                    |    10    |       95.19%        |    0.92%    |     0.29%     |
-| **v1.3-Verified** _(155 tasks)_      | Harbor Framework                    |    10    |       99.81%        |    0.31%    |     0.10%     |
+| **v1.3-Verified** _(155 tasks)_      | Harbor Framework                    |    10    |     **99.81%**      |  **0.31%**  |   **0.10%**   |
 | **Original FeatBench** _(156 tasks)_ | Patched Harness v1.2 _(No Retry)_   |    6     |       87.71%        |    5.25%    |     2.14%     |
 | **Original FeatBench** _(156 tasks)_ | Patched Harness v1.2 _(With Retry)_ |    5     |       94.36%        |    2.81%    |     1.26%     |
 
@@ -286,9 +288,9 @@ Looking further out, we think the community would benefit from a few shifts:
 
 # Acknowledgements
 
-Many thanks to **Boyuan Chen**, **Gustavo Oliva**, **Ahmed E. Hassan**, and others on our team for their help on this work and for thoughtful feedback on earlier drafts of this post.
+Many thanks to [Boyuan Chen](https://www.chenboyuan.com/), [Gustavo Oliva](https://gaoliva.com/), and [Ahmed E. Hassan](https://www.linkedin.com/in/ahmed-e-hassan/) for their help and thoughtful feedback on earlier drafts of this post, and to [Arthur Leung](https://github.com/arcyleung), [Yihao Chen](https://github.com/Superskyyy), [Akki Singh](https://github.com/holychicken99), [Shenyu Zheng](https://github.com/cizezsy), [Zifan Zhu](https://github.com/dogeggz), [Miles (Milad) Soltany](https://github.com/miladsoltany), [Sogol Masoumzadeh](https://sogolmasoumzadeh.github.io/), and the other members of our team who helped with this work.
 
-We're also grateful to the Harbor team for their work on the framework itself and for keeping the review cycle on our PRs short and substantive — particularly **Lin Shi** (Adapter Team Lead), who shepherded the FeatBench adapter through review, as well as **Crystal Zhou**, **Zixuan Zhu**, **Boxuan Li**, and **Alex Shaw** for their reviews on the related PRs.
+We're also grateful to the Harbor team for their work on the framework itself and for keeping the review cycle on our PRs short and substantive — particularly [Lin Shi](https://github.com/Slimshilin) (Adapter Team Lead), who shepherded the FeatBench adapter through review, as well as [Crystal Zhou](https://github.com/crystalxyz), [Zixuan Zhu](https://github.com/Ternura143), [Boxuan Li](https://github.com/li-boxuan), and [Alex Shaw](https://github.com/alexgshaw) for their reviews on the related PRs.
 
 # References
 
